@@ -1,0 +1,117 @@
+.AFC {
+  background: #00328d;
+  background-size: 100vw;
+  height: 100%;
+  width: 100%;
+}
+.AFC header {
+  display: flex;
+  justify-content: center;
+}
+
+.CAF {
+  background: rgb(0, 56, 7);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 56, 7, 1) 0%,
+    rgba(0, 116, 24, 1) 50%,
+    rgba(0, 56, 7, 1) 100%
+  );
+  height: 100vh;
+  justify-content: center;
+}
+
+.CAF header {
+  display: flex;
+  justify-content: center;
+}
+
+.Conmebol {
+  background: rgb(0, 55, 114);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 55, 114, 1) 0%,
+    rgba(0, 83, 150, 1) 50%,
+    rgba(0, 55, 114, 1) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-size: 100vw;
+  height: 100vh;
+}
+.Conmebol header {
+  display: flex;
+  justify-content: center;
+  padding-top: 160px;
+}
+.Conmebol header img {
+  width: 80%;
+}
+
+.Concacaf {
+  background: rgb(226, 186, 122);
+  background: linear-gradient(
+    90deg,
+    rgba(226, 186, 122, 1) 0%,
+    rgba(25, 28, 32, 1) 10%,
+    rgba(25, 28, 32, 1) 50%,
+    rgba(25, 28, 32, 1) 90%,
+    rgba(226, 186, 122, 1) 100%
+  );
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+.Concacaf header {
+  display: flex;
+  justify-content: center;
+}
+
+.OFC {
+  background: #0067e5;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+.OFC header {
+  display: flex;
+  justify-content: center;
+}
+
+.UEFA {
+  background: rgb(0, 35, 189);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 35, 189, 1) 0%,
+    #008cef 50%,
+    rgba(0, 35, 189, 1) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100vw;
+  height: 100vh;
+}
+
+.UEFA header {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.FIFA {
+  background: #003870;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.FIFA header {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}

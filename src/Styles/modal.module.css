@@ -1,0 +1,81 @@
+.overlay{
+    background-color: transparent;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 520px;
+}
+
+.form h3{
+    font-family: Qatar22;
+    padding: 14px;
+}
+
+.inputDiv{
+    display: flex;
+    gap: 4px;
+    flex-direction: column;
+    padding: 12px;
+}
+
+.inputDiv label{
+    font-family: Qatar22;
+    padding: 3px;
+}
+
+.inputDiv input, .inputDiv select, .inputDiv textarea{
+    border: .6px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 10px 18px;
+    color: black;
+    font-family: Qatar22;
+    resize: none;
+    
+}
+.inputDiv input::placeholder{
+    color: gray;
+}
+
+.btnAdd{
+    font-family: Qatar22;
+    text-align: center;
+    background-color: black;
+    color: white;
+    padding: 8px;
+    cursor: pointer;
+}
+.btnAdd svg{
+    font-size: 14px;
+}
+.icon{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.grid{
+     display: grid;
+     grid-template-columns: repeat(2,1fr);
+}
+
+.messages{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.errorMsg{
+    background-color: red;
+    color: white;
+    font-family: Qatar22;
+    text-align: center;
+    padding: 12px;
+    transition: all 0.3s ease;
+    width: 50%;
+}

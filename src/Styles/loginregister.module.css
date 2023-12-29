@@ -1,0 +1,114 @@
+.bgColor{
+    background-color: #680a4d;
+}
+
+.form_login,
+.form_login * {
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    outline: none;
+    border: none;
+}
+
+.form_login a{
+    display: flex;
+    justify-content: flex-end;
+    top: 10px;
+    position: relative;
+    width: 100%;
+}
+
+.form_login {
+    width: 400px;
+    background-color: rgba(255, 255, 255, 0.13);
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    padding: 50px 35px;
+}
+
+.form_login h3 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+}
+
+.form_login label {
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.form_login input {
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.form_login ::placeholder {
+    color: #e5e5e5;
+}
+
+.form_login button {
+    margin-top: 50px;
+    width: 100%;
+    background-color: #c99e53;
+    color: #680a4d;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform .3s ease;
+}
+
+.form_login button:hover {
+    transform: scale(1.1);
+}
+
+.form_login .social {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* En tu archivo de estilos CSS */
+
+.social div {
+    background-color: #c99e53;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #680a4d;
+    display: flex;
+    padding: 5px 10px;
+    justify-content: center;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 550;
+    transition: background-color 0.2s ease-in-out;
+    width: 150px    ;
+  }
+  
+  .social div:hover {
+    transform: scale(1.1);
+    transition: all .2s ease;
+  }
+
+.social svg {
+    fill: #680a4d;
+    height: 17px;
+}

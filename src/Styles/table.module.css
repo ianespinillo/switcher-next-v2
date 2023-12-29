@@ -1,0 +1,97 @@
+/* styles/Table.module.css */
+
+
+
+.table {
+  width: 80%;
+  border-collapse: collapse;
+  font-family: Qatar22;
+  margin-left: 18%;
+  margin-top: 20px;
+  overflow-y: hidden;
+}
+
+.tableHeader {
+  background-color: transparent;
+  
+}
+
+.tableRow {
+  display: flex;
+  justify-content: space-evenly;
+  border-top: 2px solid #c99e53;
+}
+
+
+
+.tableHead {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: #c99e53;
+  color: #680a4d;
+}
+
+.tableBody {
+  outline: 0px solid;
+}
+
+.tableCell {
+  align-items: center;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  color:  #c99e53;
+}
+
+
+
+.buttoncontainer {
+  display: flex;
+  gap: 8px; /* Espacio entre los botones */
+}
+
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.Update, .Reset_password {
+  background-color: #3490dc;
+  color: #ffffff;
+  border: none;
+  display: inline-block;
+  padding: 8px 16px;
+  font-family: Qatar22;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.Update:hover {
+  background-color: #2779bd;
+}
+
+.Delete, .Ban {
+  background-color: transparent;
+  color: red;
+  border: 1px solid red;
+  display: inline-block;
+  padding: 8px 16px;
+  font-family: Qatar22;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.Delete:hover, .Ban:hover {
+  background-color: red;
+  color: white;
+}

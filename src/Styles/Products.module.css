@@ -1,0 +1,28 @@
+
+/* Buttons css */
+
+.btnContainer{
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+    padding-top: 18px;
+    width: 100%;
+}
+
+.btn{
+    background-color: transparent;
+    border-radius: 16px;
+    font-family: Qatar22;
+    color: #c99e53;
+    padding: 8px;
+    margin-right: 18px;
+    outline: 2px solid #c99e53;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: #c99e53;
+    color: #680a4d;
+    transition: all .3s linear;
+    transform: scale(1.18);
+}

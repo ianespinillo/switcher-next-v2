@@ -1,0 +1,78 @@
+
+.container{
+    background-color: rgb(225, 224, 224);
+    display: flex;
+    margin: 8% 0 8%;
+    justify-content: center;
+    padding: 18px;
+}
+.product{
+    border:  1px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 28px;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.btnAdd{
+    background-color: dodgerblue;
+    border-radius: 18px;
+    color: #fff;
+    cursor: pointer;
+    font-family: Qatar22;
+    font-size: 22px;
+    padding: 15px;
+    text-align: center;
+    width: 240px;
+}
+
+.btnAdd:hover{
+    background-color: transparent;
+    color: dodgerblue;
+    outline: 2px solid dodgerblue;
+    transition: all .35s linear;
+}
+
+
+.img{
+    max-width: 50%;
+}
+
+.img img{
+    border: 2px solid black;
+    border-radius: 5%;
+    max-width: 550px;
+}
+
+.img p{
+    font-family: Qatar22;
+    font-size: 20px;
+    max-width: 70%;
+    padding: 10px;
+}
+
+.title{
+    align-items: center;
+    display: flex;
+    padding: 8px;
+}
+.title h1 {
+    font-family: Qatar22;
+}
+
+.title img {
+    margin-left: 20px;
+}
+
+.social-media{
+    display: flex;
+    gap: 30px;
+}

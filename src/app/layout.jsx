@@ -1,10 +1,8 @@
-import { Inter } from 'next/font/google'
-import './globals.css'
+import './global.css'
 import Provider from './SessionProvider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authoptions'
-
-const inter = Inter({ subsets: ['latin'] })
+import { Navbar } from '@/components/UI/navbar'
 
 export const metadata = {
   title: 'Create Next App',
@@ -15,9 +13,10 @@ export default async function RootLayout ({ children }) {
   const session = await getServerSession(authOptions)
   console.log(session)
   return (
-    <html lang='en'>
+    <html lang='en' id='__next'>
       <body>
         <Provider>
+          <Navbar />
           <main>{children}</main>
         </Provider>
       </body>

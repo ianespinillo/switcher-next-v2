@@ -70,3 +70,56 @@ model VerificationRequest {
 
   @@unique([identifier, token])
 }
+
+// Productos 
+
+model Confederation {
+  id          Int       @id @default(autoincrement())
+  img_url     String
+  confed_name String
+  confed_3    String
+  Country     Country[]
+}
+
+model Country {
+  id                   Int           @id @default(autoincrement())
+  name                 String
+  country_3            String
+  country_img_url      String
+  country_not_name_img String
+  confederation        Confederation @relation(fields: [confederation_id], references: [id])
+  confederation_id     Int
+  Product              Product[]
+}
+
+model Product {
+  id              Int               @id @default(autoincrement())
+  name            String
+  name_3          String
+  preview_url     String
+  price           Decimal
+  type            String
+  description     String
+  logo_url        String
+  country         Country           @relation(fields: [countryId], references: [id])
+  countryId       Int
+  Payement_detail Payement_detail[]
+}
+
+model Payement {
+  id              Int               @id @default(autoincrement())
+  method          String
+  user_email      String
+  date            DateTime
+  state           Boolean
+  Payement_detail Payement_detail[]
+}
+
+model Payement_detail {
+  id         Int      @id @default(autoincrement())
+  quantity   Int
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  Int
+  payement   Payement @relation(fields: [payementId], references: [id])
+  payementId Int
+}

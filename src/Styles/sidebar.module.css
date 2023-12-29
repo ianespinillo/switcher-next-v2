@@ -1,0 +1,55 @@
+/* Component.module.css */
+
+.container {
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: transparent;
+    color: #c99e53;
+    padding: 6px;
+    gap: 16px;
+    width: 200px;
+  }
+  
+  .link {
+    display: flex;
+    align-items: center;
+    font-family: Qatar22    ;
+    padding-left: 8px;
+    gap: 8px;
+    text-decoration: none;
+    color: #c99e53;
+  }
+  
+  .link:nth-child(1) {
+    color: #c99e53;
+  }
+  
+  .link:nth-child(2) {
+    color: #c99e53;
+  }
+  
+  .link:nth-child(3) {
+    color: #c99e53;
+  }
+  
+  .icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .icon:nth-child(1) {
+    fill: #c99e53;
+  }
+  
+  .icon:nth-child(2) {
+    fill: #c99e53;
+  }
+  
+  .icon:nth-child(3) {
+    fill: #c99e53;
+  }
