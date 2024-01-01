@@ -6,7 +6,8 @@ import Select from 'react-select'
 import modalStyle from '@/Styles/modal.module.css'
 import { IconContext } from 'react-icons'
 import { useForm } from '@/hooks/useForm'
-import { obtainConfederations } from '@/lib/productActions'
+import { createCountry, obtainConfederations } from '@/lib/productActions'
+import { useFormState } from 'react-dom'
 
 const selectStyles = {
   control: (baseStyles, state) => ({
@@ -41,10 +42,10 @@ const customStyles = {
     transform: 'translate(-50%, -50%)'
   }
 }
+//ReactModal.setAppElement('#__next')
 export const CountryModal = ({ CountryModalIsOpen, setCountryModalOpen }) => {
-  ReactModal.setAppElement('#__next')
   const [options, setOptions] = useState([])
-  const [error, setError] = useState({ state: false, msg: null })
+  const [actualOPtion, setActualOPtion] = useState(null)
 
   const [formValues, handleInputChange, handleSelectChange, reset] =
     useForm(initFormValues)
@@ -54,25 +55,15 @@ export const CountryModal = ({ CountryModalIsOpen, setCountryModalOpen }) => {
   function closeModal () {
     reset()
     setOptions([])
+    setActualOPtion(null)
     setCountryModalOpen(false) // Close the modal
   }
-  function handlePost (e) {
-    e.preventDefault()
-    if (
-      confedName == '' ||
-      countryAbrev == '' ||
-      countryName == '' ||
-      imgUrl == '' ||
-      imgWithoutName == ''
-    ) {
-      setError({ state: true, msg: 'All fields are required' })
-      setTimeout(() => {
-        setError({ state: false, msg: '' })
-      }, 1000)
-    } else {
-      
-    }
+  async function serverAc (prevState, formData) {
+    const res = await createCountry(prevState, formData)
+    (res.message==null) ? closeModal() : res
   }
+  const initialState = { message: null }
+  const [state, formAction] = useFormState(serverAc, initialState)
   async function afterOpenModal () {
     const confeds = await obtainConfederations()
     confeds.map(confed =>
@@ -96,19 +87,27 @@ export const CountryModal = ({ CountryModalIsOpen, setCountryModalOpen }) => {
         <div className={modalStyle.icon}>
           <IoIosCloseCircle onClick={closeModal} />{' '}
         </div>
-        <form className={modalStyle.form} onSubmit={handlePost}>
+        <form className={modalStyle.form} action={formAction}>
           <h3>Add a Country</h3>
           <div className={modalStyle.messages}>
-            {error.state && (
-              <div className={modalStyle.errorMsg}>{error.msg}</div>
+            {(state?.message != null) && (
+              <div
+                className={modalStyle.msgError}
+                aria-live='polite'
+                role='status'
+              >
+                {state?.message}
+              </div>
             )}
           </div>
           <div className={modalStyle.inputDiv}>
             <label htmlFor='CountryConfed'>Select country confederation</label>
             <Select
               styles={selectStyles}
-              onChange={e => handleSelectChange(e, 'confedName')}
+              onChange={e => setActualOPtion(e)}
               options={options}
+              value={actualOPtion}
+              name='confedId'
             />
           </div>
           <div className={modalStyle.inputDiv}>

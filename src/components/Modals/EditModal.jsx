@@ -33,7 +33,7 @@ const customStyles = {
 }
 
 export const EditModal = ({ values, EditModalIsOpen, setEditModalIsOpen }) => {
-  ReactModal.setAppElement('#__next')
+  //ReactModal.setAppElement('#__next')
   const [formValues, handleInputChange, handleSelectChange, ,setValues ] = useForm({})
   const [options, setOptions] = useState([])
   const {

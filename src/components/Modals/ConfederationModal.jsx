@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react'
 import ReactModal from 'react-modal'
 import { IoIosAddCircle, IoIosCloseCircle } from 'react-icons/io'
@@ -6,17 +8,18 @@ import modalStyle from '@/Styles/modal.module.css'
 import { IconContext } from 'react-icons'
 import { useForm } from '@/hooks/useForm'
 import { createConfederation } from '@/lib/productActions'
+import {useFormState} from 'react-dom';
 
 const initFormValues = {
   ConfedName: '',
   ConfedAbrev: '',
   Url: ''
 }
-ReactModal.setAppElement('#__next')
 export const ConfederationModal = ({
   ConfedModalIsOpen,
   setConfedModalOpen
 }) => {
+  //ReactModal.setAppElement('#__next')
   const customStyles = {
     content: {
       top: '50%',
@@ -27,40 +30,25 @@ export const ConfederationModal = ({
       transform: 'translate(-50%, -50%)'
     }
   }
-  
+  const initialState={
+    message: null,
+  }
+  async function serverAc(prevState, formData){
+    const res= await createConfederation(prevState, formData)
+    closeModal()
+    return res
+  }
   const [formValues, handleInputChange, , reset] = useForm(initFormValues)
   const [error, setError] = useState({ state: false, msg: null })
-
+  const[state, formAction]=useFormState(serverAc, initialState)
   const { Url, ConfedAbrev, ConfedName } = formValues
-
+  
   function closeModal () {
     reset()
     setConfedModalOpen(false) // Close the modal
   }
   function afterOpenModal () {}
-  const handlePost = e => {
-    e.preventDefault()
-    if (Url == '' || ConfedName == '' || ConfedAbrev == '') {
-      setError({ state: true, msg: 'All fields are required' })
-      setTimeout(() => {
-        setError({ state: false, msg: '' })
-      }, 1000)
-    } else {
-      fetch('/api/products/confederation', {
-        method: 'POST',
-        body: JSON.stringify(formValues),
-        headers: {
-          'Content-type': 'application/json'
-        }
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.ok) {
-            closeModal()
-          }
-        })
-    }
-  }
+  
   return (
     <ReactModal
       isOpen={ConfedModalIsOpen}
@@ -75,12 +63,12 @@ export const ConfederationModal = ({
         <div className={modalStyle.icon}>
           <IoIosCloseCircle onClick={closeModal} />{' '}
         </div>
-        <form className={modalStyle.form} action={createConfederation}>
+        <form className={modalStyle.form} action={formAction}>
           <h3>Add a confederation</h3>
           <div className={modalStyle.messages}>
-            {error.state && (
-              <div className={modalStyle.errorMsg}>{error.msg}</div>
-            )}
+            {(state?.message!=null) && <p aria-live='polite' className={modalStyle.errorMsg} role='status'>
+              {state?.message}
+            </p>}
           </div>
           <div className={modalStyle.inputDiv}>
             <label htmlFor='ConfedName'>Confederation name</label>
@@ -91,7 +79,7 @@ export const ConfederationModal = ({
               placeholder='Name of the confederation'
               value={ConfedName}
               onChange={handleInputChange}
-            />
+              />
           </div>
           <div className={modalStyle.inputDiv}>
             <label htmlFor='ConfedAbrev'>Abreviature for confederation</label>
@@ -102,7 +90,7 @@ export const ConfederationModal = ({
               placeholder='Abreviature for confed, ex: AFC'
               value={ConfedAbrev}
               onChange={handleInputChange}
-            />
+              />
           </div>
           <div className={modalStyle.inputDiv}>
             <label htmlFor='Url'>Image Url</label>
@@ -113,7 +101,7 @@ export const ConfederationModal = ({
               placeholder='ImgURL: http://www.exampl...'
               value={Url}
               onChange={handleInputChange}
-            />
+              />
           </div>
           <button type='submit' className={modalStyle.btnAdd}>
             Add <IoIosAddCircle />
@@ -123,3 +111,4 @@ export const ConfederationModal = ({
     </ReactModal>
   )
 }
+

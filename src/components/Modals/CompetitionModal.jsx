@@ -6,7 +6,9 @@ import Select from 'react-select'
 import modalStyle from '@/Styles/modal.module.css'
 import { IconContext } from 'react-icons'
 import { useForm } from '@/hooks/useForm'
-import { prodContext } from '@/Context/ProductContext'
+
+import { createCompetition, obtainCountries } from '@/lib/productActions'
+import { useFormState } from 'react-dom'
 
 const selectStyles = {
   control: (baseStyles, state) => ({
@@ -46,9 +48,16 @@ export const CompetitionModal = ({
   CompetitionModalIsOpen,
   setCompetitionModalOpen
 }) => {
+  const initialState={
+    messages: null
+  }
+  async function serverAc(prevState, formData){
+    const res = await createCompetition(prevState, formData)
+    res?.message == null? closeModal() : res 
+  }
   const [options, setOptions] = useState([])
-  const [error, setError] = useState({ state: false, msg: null })
-  
+  const [state, formAction] = useFormState(serverAc, initialState)
+
   const [formValues, handleInputChange, handleSelectChange, reset] =
     useForm(initFormValues)
   const {
@@ -61,60 +70,23 @@ export const CompetitionModal = ({
     desc
   } = formValues
 
-  ReactModal.setAppElement('#__next')
+  //  ReactModal.setAppElement('#__next')
 
   function closeModal () {
     setOptions([])
     reset()
     setCompetitionModalOpen(false) // Close the modal
   }
-  function afterOpenModal () {
-    fetch('/api/products/country')
-      .then(res => res.json())
-      .then(data => {
-        if (data.countries) {
-          data.countries.map(country =>
-            setOptions(options => [
-              ...options,
-              { label: country.name, value: country.id }
-            ])
-          )
-        }
-      })
+  async function afterOpenModal () {
+    const data = await obtainCountries()
+    data.map(country =>
+      setOptions(options => [
+        ...options,
+        { label: country.name, value: country.id }
+      ])
+    )
   }
-  function handlePost (e) {
-    e.preventDefault()
-    if (
-      competitionName == '' ||
-      competitionAbrev == '' ||
-      logoUrl == '' ||
-      previewUrl == '' ||
-      formValues.countryId == '' ||
-      price == 0 ||
-      compType == '' ||
-      desc == ''
-    ) {
-      setError({ state: true, msg: 'All fields are required' })
-      setTimeout(() => {
-        setError({ state: false, msg: '' })
-      }, 1000)
-    } else {
-      fetch('/api/products/competition', {
-        method: 'POST',
-        body: JSON.stringify(formValues),
-        headers: {
-          'content-type': 'application/json'
-        }
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.ok) {
-            
-            closeModal()
-          }
-        })
-    }
-  }
+
   return (
     <ReactModal
       isOpen={CompetitionModalIsOpen}
@@ -129,13 +101,9 @@ export const CompetitionModal = ({
         <div className={modalStyle.icon}>
           <IoIosCloseCircle onClick={closeModal} />{' '}
         </div>
-        <form className={modalStyle.form} onSubmit={handlePost}>
+        <form className={modalStyle.form} action={formAction}>
           <h3>Add a Competition</h3>
-          <div className={modalStyle.messages}>
-            {error.state && (
-              <div className={modalStyle.errorMsg}>{error.msg}</div>
-            )}
-          </div>
+          <div className={modalStyle.messages}></div>
           <div className={modalStyle.grid}>
             <div>
               <div className={modalStyle.inputDiv}>
@@ -146,6 +114,7 @@ export const CompetitionModal = ({
                   styles={selectStyles}
                   options={options}
                   onChange={e => handleSelectChange(e, 'countryId')}
+                  name='countryId'
                 />
               </div>
               <div className={modalStyle.inputDiv}>

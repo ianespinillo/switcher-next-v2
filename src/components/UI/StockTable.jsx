@@ -82,7 +82,7 @@ export const StockTable = ({
                     </button>
                     <button
                       className={Tablestyles.Delete}
-                      onClick={handleDelete}
+                      
                     >
                       <IconContext.Provider
                         value={{ style: { verticalAlign: 'middle' } }}
