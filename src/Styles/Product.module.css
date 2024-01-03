@@ -16,6 +16,7 @@
 }
 
 .buttons{
+    padding-left: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -44,12 +45,13 @@
 
 .img{
     max-width: 50%;
+    object-fit: contain;
 }
 
 .img img{
     border: 2px solid black;
     border-radius: 5%;
-    max-width: 550px;
+    max-width: 480px;
 }
 
 .img p{
@@ -75,4 +77,9 @@
 .social-media{
     display: flex;
     gap: 30px;
+}
+
+.price{
+    padding: 8px;
+    font-family: Qatar22;
 }

@@ -45,8 +45,8 @@ export const Navbar = () => {
         }
       }
     }
-  }, [location.query])
-  if (!location.includes('auth')) {
+  }, [location])
+  if (!location.includes('auth' || 'admin')) {
     if (!isLogged) {
       return (
         <nav className={styles.navBar} id='navBar'>

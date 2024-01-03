@@ -79,6 +79,7 @@ export const CompetitionModal = ({
   }
   async function afterOpenModal () {
     const data = await obtainCountries()
+    console.log(data)
     data.map(country =>
       setOptions(options => [
         ...options,

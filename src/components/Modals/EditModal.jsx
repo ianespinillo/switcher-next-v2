@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react'
 import ReactModal from 'react-modal'
 import Select from 'react-select'
@@ -32,9 +34,34 @@ const customStyles = {
   }
 }
 
-export const EditModal = ({ values, EditModalIsOpen, setEditModalIsOpen }) => {
+const initFormValues = {
+  countryId: '',
+  competitionName: '',
+  competitionAbrev: '',
+  logoUrl: '',
+  previewUrl: '',
+  price: 0,
+  compType: '',
+  desc: ''
+}
+
+export const EditModal = ({ values, editModalIsOpen, setEditModalIsOpen }) => {
   //ReactModal.setAppElement('#__next')
-  const [formValues, handleInputChange, handleSelectChange, ,setValues ] = useForm({})
+  console.log(values)
+  useEffect(() => {
+    if(values != undefined) setValues(values)
+  }, [values])
+  const [formValues, handleInputChange, handleSelectChange, , setValues] =
+    useForm({
+      countryId: '',
+      competitionName: '',
+      competitionAbrev: '',
+      logoUrl: '',
+      previewUrl: '',
+      price: 0,
+      compType: '',
+      desc: ''
+    })
   const [options, setOptions] = useState([])
   const {
     competitionName,
@@ -45,29 +72,16 @@ export const EditModal = ({ values, EditModalIsOpen, setEditModalIsOpen }) => {
     compType,
     desc
   } = formValues
-  useEffect(() =>setValues(values) ,[values])
-  function afterOpenModal () {
-    fetch('/api/products/country')
-      .then(res => res.json())
-      .then(data => {
-        if (data.countries) {
-          data.countries.map(country =>
-            setOptions(options => [
-              ...options,
-              { label: country.name, value: country.id }
-            ])
-          )
-        }
-      })
-  }
+  function afterOpenModal () {}
   const closeModal = () => setEditModalIsOpen(false)
   const handleUpdate = e => {
     e.preventDefault()
     console.log(values)
   }
+
   return (
     <ReactModal
-      isOpen={EditModalIsOpen}
+      isOpen={editModalIsOpen}
       onRequestClose={closeModal}
       onAfterOpen={afterOpenModal}
       style={customStyles}

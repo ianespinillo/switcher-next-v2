@@ -165,3 +165,51 @@ export async function obtainCountries () {
   const countriesList = await prisma.country.findMany()
   return countriesList
 }
+
+export async function filterByConfed(confed){
+  const confederation = await prisma.confederation.findFirst({
+    where: {
+      confed_3: confed
+    }
+  })
+  if(confederation){
+    const countries = await prisma.country.findMany({
+      where:{
+        confederation_id: confederation.id
+      }
+    })
+    return countries
+  }
+}
+
+export async function filterByCountry(country){
+  const countryId = await prisma.country.findFirst({
+    where:{
+      name: country
+    }
+  })
+  const childrens = await prisma.product.findMany({
+    where:{
+      countryId: countryId.id
+    }
+  })
+  return {countryId, childrens}
+}
+
+export async function filterProduct(name){
+  const product = await prisma.product.findFirst({
+    where:{
+      name: name
+    }
+  })
+  return product || {}
+}
+
+export async function filterProductById(id){
+  const product = await prisma.product.findFirst({
+    where:{
+      id: parseInt(id)
+    }
+  })
+  return product || {}
+}

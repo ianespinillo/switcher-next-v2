@@ -59,8 +59,8 @@ export const CountryModal = ({ CountryModalIsOpen, setCountryModalOpen }) => {
     setCountryModalOpen(false) // Close the modal
   }
   async function serverAc (prevState, formData) {
-    const res = await createCountry(prevState, formData)
-    (res.message==null) ? closeModal() : res
+    await createCountry(prevState, formData)
+    .then(({message}) => !message && closeModal())
   }
   const initialState = { message: null }
   const [state, formAction] = useFormState(serverAc, initialState)

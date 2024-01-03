@@ -10,46 +10,19 @@ import {
 } from '@/components/UI/Table'
 import { IconContext } from 'react-icons'
 import { BiTrash, BiPen } from 'react-icons/bi'
-import React, { useEffect, useState } from 'react'
-import { EditModal } from '../Modals/EditModal'
-import { obtainProducts } from '@/lib/productActions'
+import React from 'react'
 
-export const StockTable = ({
+import { Buttons } from '../Module/buttons'
+import { EditModal } from '../Modals/EditModal'
+
+export const StockTable = async ({
   data = [],
   titles = ['Title 1', 'Title 2', 'Title 3', 'Title 4'],
   btns = ['Update', 'Delete'],
   setValues,
   openCompetition
 }) => {
-  const [formValues, setFormValues] = useState({})
-  const [editModalIsOpen, setEditModalIsOpen] = useState(false)
-  const [products, setProducts] = useState([])
-
-  function handleUpdate ({ target }) {
-    const id =
-      target.parentElement.parentElement.parentElement.childNodes[0].textContent
-    const values = products.find(p => p.id === parseInt(id))
-    setFormValues({
-      countryId: values.countryId,
-      competitionName: values.name,
-      competitionAbrev: values.name_3,
-      logoUrl: values.logo_url,
-      previewUrl: values.preview_url,
-      price: parseInt(values.price),
-      compType: values.type,
-      desc: values.description
-    })
-    setEditModalIsOpen(true)
-  }
-  useEffect(() => {
-    async function setProds () {
-      const prods = await obtainProducts()
-      console.log(prods)
-      setProducts(prods)
-    }
-    setProds()
-  }, [])
-
+  const products = await data
   return (
     <>
       <Table>
@@ -68,30 +41,7 @@ export const StockTable = ({
                 <TableCell key={data.name}>{data.name}</TableCell>
                 <TableCell>{data.countryName}</TableCell>
                 <TableCell>
-                  <div className={Tablestyles.buttoncontainer}>
-                    <button
-                      className={Tablestyles.Update}
-                      onClick={handleUpdate}
-                    >
-                      <IconContext.Provider
-                        value={{ style: { verticalAlign: 'middle' } }}
-                      >
-                        Update
-                        <BiPen fontSize={18} />
-                      </IconContext.Provider>
-                    </button>
-                    <button
-                      className={Tablestyles.Delete}
-                      
-                    >
-                      <IconContext.Provider
-                        value={{ style: { verticalAlign: 'middle' } }}
-                      >
-                        Delete
-                        <BiTrash fontSize={18} />
-                      </IconContext.Provider>
-                    </button>
-                  </div>
+                  <Buttons />
                 </TableCell>
               </TableRow>
             ))
@@ -122,11 +72,6 @@ export const StockTable = ({
           )}
         </TableBody>
       </Table>
-      <EditModal
-        values={formValues}
-        EditModalIsOpen={editModalIsOpen}
-        setEditModalIsOpen={setEditModalIsOpen}
-      />
     </>
   )
 }

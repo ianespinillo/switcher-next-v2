@@ -3,6 +3,7 @@ import Provider from './SessionProvider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authoptions'
 import { Navbar } from '@/components/UI/navbar'
+import './global.css'
 
 export const metadata = {
   title: 'Create Next App',
