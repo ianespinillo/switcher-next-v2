@@ -1,8 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url(../Styles/Confederacion.module.css);
 @import url(../Styles/Country.module.css);
 @import url(../Styles/Navbar.module.css);
-
-
 
 @font-face {
   font-family: Qatar22;
@@ -16,6 +18,10 @@ body {
     rgba(100, 10, 75, 1) 50%,
     rgba(47, 4, 35, 1) 100%
   );
+}
+
+.qatar{
+  font-family: Qatar22;
 }
 
 * {
@@ -112,23 +118,55 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 80px;
+  gap: 180px;
   text-align: center;
   padding: 100px;
-  margin-right: 150px;
-  transform: scale(2);
 }
 
-.header-texts img{
+.header-texts img, .header-texts p{
+  transform: scale(1.8  );
+}
+
+.header-texts img {
   margin-top: 25px;
-  
 }
 .countryName {
-  background: -webkit-linear-gradient(186deg, #f4c05b 0%, #af6c37 100%);
+  background: -webkit-linear-gradient(270deg, #f4c05b 0%, #af6c37 100%);
   -webkit-background-clip: text;
   font-family: Qatar22;
   font-weight: bolder;
   font-size: 42px;
   -webkit-text-fill-color: transparent;
-  color: tomato;  
+  color: tomato;
 }
+
+/* thead,
+tbody,
+tfoot {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+tr {
+  align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+th,
+td {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  width: 33%;
+  align-items: center;
+  text-align: center;
+  color: #680a4d;
+  font-family: Qatar22;
+}
+
+tr > svg {
+  cursor: pointer;
+  font-size: 34px;
+  fill: #680a4d;
+} */

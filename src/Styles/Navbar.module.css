@@ -3,7 +3,7 @@
 .navBar{
     background-color: transparent;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     width: 100%;
 }
 .navbar-ul{
@@ -102,6 +102,9 @@
     transition: all .35s ease;
 }
 
+.AFC .submenu{
+    background-color: transparent;
+}
 
 .CAF nav{
     color: #f3ca0c;
@@ -358,28 +361,7 @@
 
     background-color: #c99e53;
 }
-/* thead, tbody, tfoot {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    
-}
-tr{
-    align-items: center;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-}
-th,td{
-    display: flex;
-    justify-content:center;
-    font-weight: bold;
-    width: 33%;
-    align-items: center;
-    text-align: center;
-    color: #680a4d;
-    font-family: Qatar22;
-} */
+/*  */
 
 .close svg {
     cursor: pointer;
@@ -389,7 +371,5 @@ th,td{
 }
 
 /* tr>svg {
-    cursor: pointer;
-    font-size: 34px;
-    fill: #680a4d;
+    
 } */

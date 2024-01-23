@@ -6,7 +6,6 @@ import { filterByCountry } from '@/lib/productActions'
 
 export default async function page ({ params: { ConfedName, CountryName } }) {
   const { countryId, childrens } = await filterByCountry(CountryName)
-  console.log(childrens)
   return (
     <>
       <header>

@@ -149,7 +149,6 @@ export async function obtainProducts () {
         }
       })
       prod.countryName = name
-      console.log(name)
       prodsWithCN.push(prod)
     })
   )

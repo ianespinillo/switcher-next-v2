@@ -1,6 +1,8 @@
+'use client'
+
 import { useForm } from '@/hooks/useForm'
 import React from 'react'
-import Router from 'next/router'
+import Router from 'next/navigation'
 import Link from 'next/link'
 
 import Styles from '@/Styles/loginregister.module.css'

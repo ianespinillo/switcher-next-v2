@@ -1,11 +1,13 @@
 import { filterProduct } from '@/lib/productActions'
 import React from 'react'
 import styles from '@/Styles/Product.module.css'
+import AddButton from '@/components/UI/AddButton'
+
 
 export default async function page ({ params: { ProdName } }) {
   const name = ProdName.split('%20').join(' ')
   const product = await filterProduct(name)
-  console.log(product)
+
   return (
     <div className={styles.container}>
       <div className={styles.product}>
@@ -21,7 +23,7 @@ export default async function page ({ params: { ProdName } }) {
             </div>
             <span className={styles.price}>Price: ${parseFloat(product.price)}</span>
           </div>
-          <button className={styles.btnAdd}>Add to cest</button>
+          <AddButton prod={product} /> 
           <div className={styles['social-media']}>
             <img
               src='https://res.cloudinary.com/dsytdfyvb/image/upload/v1700528946/images/Minilogos/faw8slsixbufsa1djfws.png'

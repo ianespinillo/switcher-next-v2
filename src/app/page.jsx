@@ -1,11 +1,21 @@
 
-import { obtainConfederations } from '@/lib/productActions'
-import { signIn, useSession } from 'next-auth/react'
 import React from 'react'
 import Link from 'next/link'
 
-export default async function page () {
+import { obtainConfederations } from '@/lib/productActions'
+
+
+
+export default async function page ({ searchParams }) {
   const confederations = await obtainConfederations()
+  
+  
+  if (
+    searchParams.collection_status &&
+    searchParams.collection_status == 'approved'
+  ) {
+    
+  }
   return (
     <>
       <div className='grilla'>

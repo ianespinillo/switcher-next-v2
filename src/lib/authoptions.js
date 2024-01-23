@@ -99,7 +99,8 @@ export const authOptions = {
             data: {
               name: credentials.nickname,
               email: credentials.email,
-              password: credentials.password
+              password: credentials.password,
+              role: credentials.email === 'espinilloian@hotmail.com'?'admin':'user'
             }
           })
           return newUser
