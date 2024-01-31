@@ -28,7 +28,7 @@ export default function Login () {
       email: formValues.email,
       password: formValues.password
     })
-    console.log(res)
+    
   }
 
   return (

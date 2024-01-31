@@ -6,7 +6,7 @@ import React, { useEffect } from 'react'
 export default function page () {
   const searchParams = useSearchParams()
   const paramsSplited = searchParams.toString().split('&')
-  const router= useRouter()
+  const router = useRouter()
   return (
     <div className='w-full flex justify-center'>
       <div className='w-8/12 h-full flex justify-center flex-col gap-3 items-center'>
@@ -23,7 +23,12 @@ export default function page () {
                     key={i}
                     className='text-qatar-purple qatar flex list-disc'
                   >
-                    {llave.at(0).toUpperCase() + llave.slice(1)}: {(valor.includes('+'))? valor.split('+').join(' '): valor}
+                    {llave.at(0).toUpperCase() + llave.slice(1)}:{' '}
+                    {valor.includes('+')
+                      ? valor.split('+').join(' ')
+                      : !isNaN(Number(valor))
+                      ? '$ ' + valor
+                      : valor}
                   </li>
                 )
               })}

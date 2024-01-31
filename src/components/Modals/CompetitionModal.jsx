@@ -9,6 +9,7 @@ import { useForm } from '@/hooks/useForm'
 
 import { createCompetition, obtainCountries } from '@/lib/productActions'
 import { useFormState } from 'react-dom'
+import { useEdgeStore } from '@/lib/utils/edgestore'
 
 const selectStyles = {
   control: (baseStyles, state) => ({
@@ -42,24 +43,31 @@ const initFormValues = {
   previewUrl: '',
   price: 0,
   compType: '',
-  desc: ''
+  desc: '',
+  bigFile: '',
+  fifaprojectFile: ''
 }
 export const CompetitionModal = ({
   CompetitionModalIsOpen,
   setCompetitionModalOpen
 }) => {
-  const initialState={
+  const initialState = {
     messages: null
   }
-  async function serverAc(prevState, formData){
+  async function serverAc (prevState, formData) {
     const res = await createCompetition(prevState, formData)
-    res?.message == null? closeModal() : res 
+    res?.message == null ? closeModal() : res
   }
   const [options, setOptions] = useState([])
   const [state, formAction] = useFormState(serverAc, initialState)
-
-  const [formValues, handleInputChange, handleSelectChange, reset] =
-    useForm(initFormValues)
+  const { edgestore } = useEdgeStore()
+  const [
+    formValues,
+    handleInputChange,
+    handleSelectChange,
+    reset,
+    setFormValues
+  ] = useForm(initFormValues)
   const {
     competitionName,
     competitionAbrev,
@@ -69,9 +77,48 @@ export const CompetitionModal = ({
     compType,
     desc
   } = formValues
-
-  //  ReactModal.setAppElement('#__next')
-
+  const [{ big, fifaproject, logo, preview }, setFiles] = useState({
+    big: null,
+    fifaproject: null,
+    logo: null,
+    preview: null
+  })
+  ReactModal.setAppElement('#__next')
+  // hacer un efecto que cargue los archivos a edgestore y retorne la url en el formValues, debe observar cual cambio
+  useEffect(() => {
+    if (big) {
+      console.log('big')
+      edgestore.publicFiles
+        .upload({
+          file: big
+        })
+        .then(res => setFormValues({ ...formValues, bigFile: res.url }))
+    }
+    if (fifaproject) {
+      console.log('fifaproject')
+      edgestore.publicFiles
+        .upload({
+          file: fifaproject
+        })
+        .then(res => setFormValues({ ...formValues, fifaprojectFile: res.url }))
+    }
+    if (logo) {
+      console.log('logo')
+      edgestore.publicFiles
+        .upload({
+          file: logo
+        })
+        .then(res => setFormValues({ ...formValues, logoUrl: res.url }))
+    }
+    if (preview) {
+      console.log('preview')
+      edgestore.publicFiles
+        .upload({
+          file: preview
+        })
+        .then(res => setFormValues({ ...formValues, previewUrl: res.url }))
+    }
+  }, [big, fifaproject, logo, preview])
   function closeModal () {
     setOptions([])
     reset()
@@ -79,7 +126,7 @@ export const CompetitionModal = ({
   }
   async function afterOpenModal () {
     const data = await obtainCountries()
-    console.log(data)
+
     data.map(country =>
       setOptions(options => [
         ...options,
@@ -145,12 +192,22 @@ export const CompetitionModal = ({
               <div className={modalStyle.inputDiv}>
                 <label htmlFor='Url'>Logo Url</label>
                 <input
-                  type='url'
+                  type='file'
                   name='logoUrl'
-                  id='Url'
-                  placeholder='ImgURL: http://www.exampl...'
-                  value={logoUrl}
-                  onChange={handleInputChange}
+                  id=''
+                  onChange={e =>
+                    setFiles({ ...Files, logo: e.target.files[0] })
+                  }
+                  className='file:bg-transparent file:border-0'
+                />
+              </div>
+              <div className={modalStyle.inputDiv}>
+                <label htmlFor='big'>BIG File</label>
+                <input
+                  type='file'
+                  name='big'
+                  className='file:bg-transparent file:border-0'
+                  onChange={e => setFiles({ ...Files, big: e.target.files[0] })}
                 />
               </div>
             </div>
@@ -158,12 +215,12 @@ export const CompetitionModal = ({
               <div className={modalStyle.inputDiv}>
                 <label htmlFor='Url'>Preview Url</label>
                 <input
-                  type='url'
+                  type='file'
                   name='previewUrl'
-                  id='Url'
-                  placeholder='ImgURL: http://www.exampl...'
-                  value={previewUrl}
-                  onChange={handleInputChange}
+                  onChange={e =>
+                    setFiles({ ...Files, preview: e.target.files[0] })
+                  }
+                  className='file:bg-transparent file:border-0'
                 />
               </div>
               <div className={modalStyle.inputDiv}>
@@ -190,12 +247,24 @@ export const CompetitionModal = ({
               </div>
               <div className={modalStyle.inputDiv}>
                 <label htmlFor='Desc'>Competition Description</label>
-                <textarea
+                <input
+                  type='text'
                   name='desc'
                   id='Desc'
                   placeholder='First league of Argentine'
                   value={desc}
                   onChange={handleInputChange}
+                />
+              </div>
+              <div className={modalStyle.inputDiv}>
+                <label htmlFor='fifaproject'>Fifaproject</label>
+                <input
+                  type='file'
+                  name='fifaproject'
+                  className='file:bg-transparent file:border-0'
+                  onChange={e =>
+                    setFiles({ ...Files, fifaproject: e.target.files[0] })
+                  }
                 />
               </div>
             </div>

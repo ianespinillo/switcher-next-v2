@@ -3,6 +3,7 @@ import Provider from './SessionProvider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authoptions'
 import { Navbar } from '@/components/UI/navbar'
+import { EdgeStoreProvider } from '../lib/utils/edgestore'
 import './global.css'
 
 export const metadata = {
@@ -12,14 +13,16 @@ export const metadata = {
 
 export default async function RootLayout ({ children }) {
   const session = await getServerSession(authOptions)
-  
+
   return (
     <html lang='en' id='__next'>
       <body>
-        <Provider>
-          <Navbar />
-          <main>{children}</main>
-        </Provider>
+        <EdgeStoreProvider>
+          <Provider>
+            <Navbar />
+            <main>{children}</main>
+          </Provider>
+        </EdgeStoreProvider>
       </body>
     </html>
   )

@@ -10,6 +10,7 @@ import { CreditCardIcon, UsersIcon } from '@/components/icons/Icons'
 import Link from 'next/link'
 import { LuPackage } from 'react-icons/lu'
 import { MdOutlineLogout } from 'react-icons/md'
+import { PiShoppingBagFill } from "react-icons/pi";
 export default function Sidebar ({ children }) {
   return (
     <>
@@ -31,6 +32,13 @@ export default function Sidebar ({ children }) {
           >
             <UsersIcon className='h-4 w-4' />
             Profile
+          </Link>
+          <Link
+            className='flex items-center gap-3 rounded-lg px-3 py-2 text-qatar-gold transition-all hover:text-base'
+            href='/dashboard/orders'
+          >
+            <PiShoppingBagFill className='h-4 w-4' />
+            My Orders
           </Link>
         </nav>
         {/* Return to Home */}

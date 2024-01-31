@@ -1,10 +1,10 @@
 'use client'
 import { useForm } from '@/hooks/useForm'
-import React from 'react'
+import { useEdgeStore } from '@/lib/utils/edgestore'
+import React, { useEffect, useState } from 'react'
 
-export default function EditProfile ({ user:{user} }) {
-  console.log(user)
-  const {name:username, email:usrEmail, image} = user
+export default function EditProfile ({ user: { user } }) {
+  const { name: username, email: usrEmail, image } = user
   const initialValues = {
     name: username || '',
     email: usrEmail || '',
@@ -13,10 +13,38 @@ export default function EditProfile ({ user:{user} }) {
     confirmPassword: '',
     avatarUrl: image || ''
   }
-  const [formValues, handleInputChange] = useForm(initialValues)
-  const { name, email,oldPassword, newPassword, confirmPassword, avatarUrl } = formValues
+  const [file, setFile] = useState(null)
+  const { edgestore } = useEdgeStore()
+  const [error, setError] = useState({ state: false, msg: null })
+  const [formValues, handleInputChange, , , setFormValues] =
+    useForm(initialValues)
+  const { name, email, oldPassword, newPassword, confirmPassword, avatarUrl } =
+    formValues
+  const handleSubmit = e => {
+    e.preventDefault()
+    if (
+      newPassword != confirmPassword ||
+      newPassword == '' ||
+      oldPassword == ''
+    ) {
+      setError({
+        state: true,
+        msg: 'Passwords do not match'
+      })
+    }
+  }
+  useEffect(() => {
+    if (file) {
+      edgestore.publicFiles.upload({
+        file,
+
+      })
+      .then((res) =>setFormValues({...formValues, avatarUrl: res.url}))
+    }
+  }, [file])
   return (
-    <form className='flex flex-col gap-4 qatar w-1/3'>
+    <form className='flex flex-col gap-4 qatar w-1/3' onSubmit={handleSubmit}>
+      {error.state && <p className='text-red-500 p-3'>{error.msg}</p>}
       <div className=' flex flex-col gap-1'>
         <label className='text-qatar-gold' htmlFor='name'>
           Name
@@ -55,7 +83,7 @@ export default function EditProfile ({ user:{user} }) {
           className='bg-transparent text-qatar-gold outline outline-qatar-gold outline-2 placeholder:text-qatar-gold rounded-md focus:outline focus:outline-qatar-gold p-1 pl-3'
           placeholder='Enter your old password'
           type='password'
-          name='password'
+          name='oldPassword'
           id='password'
           onChange={handleInputChange}
           value={oldPassword}
@@ -70,8 +98,8 @@ export default function EditProfile ({ user:{user} }) {
           className='bg-transparent text-qatar-gold outline outline-qatar-gold outline-2 placeholder:text-qatar-gold rounded-md focus:outline focus:outline-qatar-gold p-1 pl-3'
           placeholder='Enter your password'
           type='password'
-          name='password'
-          id='password'
+          name='newPassword'
+          id='newpassword'
           onChange={handleInputChange}
           value={newPassword}
           autoComplete='off'
@@ -85,8 +113,8 @@ export default function EditProfile ({ user:{user} }) {
           className='bg-transparent text-qatar-gold outline outline-qatar-gold outline-2 placeholder:text-qatar-gold rounded-md focus:outline focus:outline-qatar-gold p-1 pl-3'
           placeholder='Confirm your password'
           type='password'
-          name='confpassword'
-          id='password'
+          name='confirmPassword'
+          id='confpassword'
           onChange={handleInputChange}
           value={confirmPassword}
           autoComplete='off'
@@ -98,12 +126,12 @@ export default function EditProfile ({ user:{user} }) {
         </label>
         <input
           type='file'
-          name='usrAvatar'
+          name='avatarUrl'
           id='usrAvatar'
           accept='.png,.jpg, .jpeg,'
           className='bg-qatar-gold text-qatar-purple file:text-qatar-gold file:bg-qatar-purple file:border-0 cursor-pointer'
-          onChange={handleInputChange}
-          value={avatarUrl}
+          onChange={e => setFile(e.target.files[0])}
+          
         />
       </div>
       <button className='bg-transparent text-qatar-gold w-full text-lg rounded-lg outline outline-qatar-gold outline-2 hover:bg-qatar-gold hover:text-qatar-purple hover:transition-all hover:duration-500'>

@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactModal from 'react-modal'
 import { IoIosAddCircle, IoIosCloseCircle } from 'react-icons/io'
 
@@ -8,7 +8,8 @@ import modalStyle from '@/Styles/modal.module.css'
 import { IconContext } from 'react-icons'
 import { useForm } from '@/hooks/useForm'
 import { createConfederation } from '@/lib/productActions'
-import {useFormState} from 'react-dom';
+import { useFormState } from 'react-dom'
+import { useEdgeStore } from '@/lib/utils/edgestore'
 
 const initFormValues = {
   ConfedName: '',
@@ -30,25 +31,39 @@ export const ConfederationModal = ({
       transform: 'translate(-50%, -50%)'
     }
   }
-  const initialState={
-    message: null,
+  const initialState = {
+    message: null
   }
-  async function serverAc(prevState, formData){
-    const res= await createConfederation(prevState, formData)
-    closeModal()
+  async function serverAc (prevState, formData) {
+    console.log(prevState)
+    const res = await createConfederation(prevState, formData, formValues.Url)
+    res.message==null && closeModal()
     return res
   }
-  const [formValues, handleInputChange, , reset] = useForm(initFormValues)
+  const [formValues, handleInputChange, , reset, setFormValues] =
+    useForm(initFormValues)
+  const { edgestore } = useEdgeStore()
+  const [logo, setLogo] = useState(null)
   const [error, setError] = useState({ state: false, msg: null })
-  const[state, formAction]=useFormState(serverAc, initialState)
+  const [state, formAction] = useFormState(serverAc, initialState)
   const { Url, ConfedAbrev, ConfedName } = formValues
-  
+
+  useEffect(() => {
+    if (logo) {
+      edgestore.publicFiles
+        .upload({
+          file: logo
+        })
+        .then(res =>setFormValues({...formValues, Url: res.url}) )
+    }
+  }, [logo])
+
   function closeModal () {
     reset()
     setConfedModalOpen(false) // Close the modal
   }
   function afterOpenModal () {}
-  
+
   return (
     <ReactModal
       isOpen={ConfedModalIsOpen}
@@ -66,9 +81,15 @@ export const ConfederationModal = ({
         <form className={modalStyle.form} action={formAction}>
           <h3>Add a confederation</h3>
           <div className={modalStyle.messages}>
-            {(state?.message!=null) && <p aria-live='polite' className={modalStyle.errorMsg} role='status'>
-              {state?.message}
-            </p>}
+            {state?.message != null && (
+              <p
+                aria-live='polite'
+                className={modalStyle.errorMsg}
+                role='status'
+              >
+                {state?.message}
+              </p>
+            )}
           </div>
           <div className={modalStyle.inputDiv}>
             <label htmlFor='ConfedName'>Confederation name</label>
@@ -79,7 +100,7 @@ export const ConfederationModal = ({
               placeholder='Name of the confederation'
               value={ConfedName}
               onChange={handleInputChange}
-              />
+            />
           </div>
           <div className={modalStyle.inputDiv}>
             <label htmlFor='ConfedAbrev'>Abreviature for confederation</label>
@@ -90,18 +111,17 @@ export const ConfederationModal = ({
               placeholder='Abreviature for confed, ex: AFC'
               value={ConfedAbrev}
               onChange={handleInputChange}
-              />
+            />
           </div>
           <div className={modalStyle.inputDiv}>
             <label htmlFor='Url'>Image Url</label>
             <input
-              type='url'
-              name='Url'
-              id='Url'
-              placeholder='ImgURL: http://www.exampl...'
-              value={Url}
-              onChange={handleInputChange}
-              />
+              type='file'
+              name='Logo'
+              id='confedLogo'
+              className='file:bg-transparent file:border-0'
+              onChange={e => setLogo(e.target.files[0])}
+            />
           </div>
           <button type='submit' className={modalStyle.btnAdd}>
             Add <IoIosAddCircle />
@@ -111,4 +131,3 @@ export const ConfederationModal = ({
     </ReactModal>
   )
 }
-

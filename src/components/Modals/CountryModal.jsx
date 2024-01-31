@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactModal from 'react-modal'
 import { IoIosAddCircle, IoIosCloseCircle } from 'react-icons/io'
 import Select from 'react-select'
@@ -8,6 +8,7 @@ import { IconContext } from 'react-icons'
 import { useForm } from '@/hooks/useForm'
 import { createCountry, obtainConfederations } from '@/lib/productActions'
 import { useFormState } from 'react-dom'
+import { useEdgeStore } from '@/lib/utils/edgestore'
 
 const selectStyles = {
   control: (baseStyles, state) => ({
@@ -45,12 +46,39 @@ const customStyles = {
 //ReactModal.setAppElement('#__next')
 export const CountryModal = ({ CountryModalIsOpen, setCountryModalOpen }) => {
   const [options, setOptions] = useState([])
+  const { edgestore } = useEdgeStore()
   const [actualOPtion, setActualOPtion] = useState(null)
-
-  const [formValues, handleInputChange, handleSelectChange, reset] =
-    useForm(initFormValues)
-  const { countryName, countryAbrev, confedName, imgUrl, imgWithoutName } =
-    formValues
+  const [images, setImages] = useState({
+    no_name: null,
+    img: null
+  })
+  const [
+    formValues,
+    handleInputChange,
+    handleSelectChange,
+    reset,
+    setFormValues
+  ] = useForm(initFormValues)
+  const { countryName, countryAbrev, confedName } = formValues
+  
+  useEffect(() => {
+    if (images.img) {
+      edgestore.publicFiles
+        .upload({
+          file: images.img
+        })
+        .then(res => setFormValues({ ...formValues, imgUrl: res.url }))
+    } 
+  }, [images.img])
+  useEffect(() => {
+    if (images.no_name) {
+      edgestore.publicFiles
+        .upload({
+          file: images.no_name
+        })
+        .then(res => setFormValues({ ...formValues, imgWithoutName: res.url }))
+    }
+  }, [images.no_name])
 
   function closeModal () {
     reset()
@@ -59,8 +87,12 @@ export const CountryModal = ({ CountryModalIsOpen, setCountryModalOpen }) => {
     setCountryModalOpen(false) // Close the modal
   }
   async function serverAc (prevState, formData) {
-    await createCountry(prevState, formData)
-    .then(({message}) => !message && closeModal())
+    await createCountry(
+      prevState,
+      formData,
+      formValues.imgUrl,
+      formValues.imgWithoutName
+    ).then(({ message }) => !message && closeModal())
   }
   const initialState = { message: null }
   const [state, formAction] = useFormState(serverAc, initialState)
@@ -90,7 +122,7 @@ export const CountryModal = ({ CountryModalIsOpen, setCountryModalOpen }) => {
         <form className={modalStyle.form} action={formAction}>
           <h3>Add a Country</h3>
           <div className={modalStyle.messages}>
-            {(state?.message != null) && (
+            {state?.message != null && (
               <div
                 className={modalStyle.msgError}
                 aria-live='polite'
@@ -135,23 +167,23 @@ export const CountryModal = ({ CountryModalIsOpen, setCountryModalOpen }) => {
           <div className={modalStyle.inputDiv}>
             <label htmlFor='Url'>Image Url</label>
             <input
-              type='url'
+              className='file:bg-transparent file:border-0'
+              type='file'
               name='imgUrl'
-              id='Url'
-              placeholder='ImgURL: http://www.exampl...'
-              value={imgUrl}
-              onChange={handleInputChange}
+              id='UrlLogo'
+              onChange={e => setImages({ ...images, img: e.target.files[0] })}
             />
           </div>
           <div className={modalStyle.inputDiv}>
             <label htmlFor='Url'>Image without name url</label>
             <input
-              type='url'
+              className='file:bg-transparent file:border-0'
+              type='file'
               name='imgWithoutName'
               id='Url'
-              placeholder='ImgURL: http://www.exampl...'
-              value={imgWithoutName}
-              onChange={handleInputChange}
+              onChange={e =>
+                setImages({ ...images, no_name: e.target.files[0] })
+              }
             />
           </div>
           <button type='submit' className={modalStyle.btnAdd}>

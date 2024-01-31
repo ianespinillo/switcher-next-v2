@@ -1,14 +1,12 @@
 import React from 'react'
 
-import Tablestyles from '@/Styles/table.module.css'
 import {
   Table,
   TableHeader,
   TableRow,
   TableHead,
   TableBody,
-  TableCell,
-  Button
+  TableCell
 } from '@/components/UI/Table'
 
 export const PayementsTable = () => {
@@ -16,10 +14,10 @@ export const PayementsTable = () => {
     <Table>
       <TableHeader>
         <TableRow>
-            <TableHead>Buyed by</TableHead>
-            <TableHead>Products buyed</TableHead>
-            <TableHead>Ticket id</TableHead>
-            <TableHead>Amount</TableHead>
+          <TableHead>Buyed by</TableHead>
+          <TableHead>Products buyed</TableHead>
+          <TableHead>Ticket id</TableHead>
+          <TableHead>Amount</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

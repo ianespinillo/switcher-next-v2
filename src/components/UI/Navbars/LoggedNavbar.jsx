@@ -123,8 +123,8 @@ export const LoggedNavbar = () => {
           <button 
             className='bg-qatar-gold text-qatar-purple qatar rounded-lg flex items-center gap-1.5 p-1.5'
             onClick={() =>{ 
-              setModalIsOpen(false); //
               router.push('/checkout')
+              setModalIsOpen(false); //
             }}
           >
             Go to checkout

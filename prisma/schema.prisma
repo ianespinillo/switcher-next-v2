@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -56,7 +57,7 @@ model Session {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  @@index([sessionToken(length: 255)], name: "session_token")
+  @@index([sessionToken], name: "session_token")
   @@map("sessions")
 }
 
@@ -112,6 +113,7 @@ model Payement {
   user_email      String
   date            DateTime
   state           Boolean
+  amount          Float
   Payement_detail Payement_detail[]
 }
 

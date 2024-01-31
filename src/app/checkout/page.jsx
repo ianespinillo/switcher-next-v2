@@ -25,20 +25,18 @@ export default function page () {
     }
   }, [session])
 
-  
-  
+  useEffect(() => {
+    setIsClient(true)
+    fetch('/api/checkout/mp', {
+      method: 'POST',
+      body: JSON.stringify({ cart, total })
+    })
+      .then(res => res.json())
+      .then(res => setPreferenceId(res.id))
+  }, [])
   
   if (isClient && cartSize > 0) {
-    useEffect(() => {
-      setIsClient(true)
-  
-      fetch('/api/checkout/mp', {
-        method: 'POST',
-        body: JSON.stringify({ cart, total })
-      })
-        .then(res => res.json())
-        .then(res => setPreferenceId(res.id))
-    }, [])
+    
     return (
       <div className='grid grid-cols-2'>
         <div className='p-4'>
@@ -117,26 +115,26 @@ export default function page () {
                     payer: { email_address },
                     create_time
                   } = await actions.order.capture()
+                  const payed = purchase_units
+                    .map(unit => Number(unit.amount.value))
+                    .reduce((total, valor) => total + valor, 0)
 
                   const paymentId = await paypalPayement(
                     status,
                     update_time,
-                    email.currentUser
+                    email.currentUser,
+                    payed,
                   )
                   await createPayementDetail(paymentId, purchase_units)
-                  resetCart()
                   const queries = {
                     id: id,
                     status: status,
-                    totalPayed:
-                      '$' +
-                      purchase_units
-                        .map(unit => Number(unit.amount.value))
-                        .reduce((total, valor) => total + valor, 0),
+                    totalPayed: payed,
                     dateCreated: moment(create_time).format('MMMM Do YYYY'),
                     dateCompleted: moment(update_time).format('MMMM Do YYYY'),
                     email: email_address
                   }
+                  resetCart()
                   const queryParams = new URLSearchParams(queries).toString()
                   router.push(`/success?${queryParams}`)
                 }}
@@ -156,7 +154,5 @@ export default function page () {
         </div>
       </div>
     )
-  }else{
-    return router.push('/')
   }
 }
