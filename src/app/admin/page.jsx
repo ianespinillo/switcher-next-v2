@@ -1,6 +1,6 @@
 import React from 'react'
 
-export function Index () {
+export function adminPage () {
   return (
     <>
       

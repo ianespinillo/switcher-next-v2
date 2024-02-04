@@ -22,7 +22,7 @@ export async function POST (req, res) {
         unit_price: parseFloat(item.price)
       })),
       back_urls: {
-        success: 'http://localhost:3000/success'
+        success: 'https://scoreboard-switcher.vercel.app/success'
         /* failure: "http://www.tu-sitio/failure",
           pending: "http://www.tu-sitio/pending" */
       },

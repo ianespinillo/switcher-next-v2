@@ -2,7 +2,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
-import { NextResponse } from 'next/server'
+import { compare, hash } from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -45,12 +45,12 @@ export const authOptions = {
 
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials.email,
-            password: credentials.password
+            email: credentials.email
           }
         })
+        const matchPassword = await compare(credentials.password, user.password)
 
-        if (!user || !(credentials.password == user.password)) {
+        if (!user || !matchPassword) {
           return null
         }
 
@@ -90,17 +90,20 @@ export const authOptions = {
         ) {
           return null
         }
-        const notUsedEmail = await prisma.user.findUnique({
+        const notUsedEmail = await prisma.user.findFirst({
           where: { email: credentials.email }
         })
-
+        const hashedPassword= hash(credentials.password, 10)
         if (!notUsedEmail) {
           const newUser = await prisma.user.create({
             data: {
               name: credentials.nickname,
               email: credentials.email,
               password: credentials.password,
-              role: credentials.email === 'espinilloian@hotmail.com'?'admin':'user'
+              role:
+                credentials.email === 'espinilloian@hotmail.com'
+                  ? 'admin'
+                  : 'user'
             }
           })
           return newUser
