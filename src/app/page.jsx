@@ -6,7 +6,7 @@ import { obtainConfederations } from '@/lib/productActions'
 
 
 
-export default async function page ({ searchParams }) {
+export default async function Page ({ searchParams }) {
   const confederations = await obtainConfederations()
 
   return (

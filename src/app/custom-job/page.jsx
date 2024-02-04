@@ -1,6 +1,6 @@
 import React from 'react'
 import { CustomJob } from '@/components/Form/CustomJob';
-export default function page () {
+export default function Page () {
   return (
     <div className='flex flex-col '>
       <div className='ml-5'>

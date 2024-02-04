@@ -6,7 +6,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authoptions'
 import Link from 'next/link'
 
-export default async function page ({ params: { ProdName } }) {
+export default async function Page ({ params: { ProdName } }) {
   const name = ProdName.split('%20').join(' ')
   const product = await filterProduct(name)
   const { user } = await getServerSession(authOptions)

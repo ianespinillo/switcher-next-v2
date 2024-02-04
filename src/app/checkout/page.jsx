@@ -1,7 +1,7 @@
 import { CheckoutTable } from '../../components/checkout/CheckoutTable'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authoptions'
-export default async function page () {
+export default async function Page () {
   const { user } = await getServerSession(authOptions)
   return <CheckoutTable email={user.email} />
 }

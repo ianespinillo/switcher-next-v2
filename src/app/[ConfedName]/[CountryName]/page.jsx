@@ -4,7 +4,7 @@ import Link from 'next/link'
 import styles from '@/Styles/Country.module.css'
 import { filterByCountry } from '@/lib/productActions'
 
-export default async function page ({ params: { ConfedName, CountryName } }) {
+export default async function Page ({ params: { ConfedName, CountryName } }) {
   const { countryId, childrens } = await filterByCountry(CountryName)
   return (
     <>

@@ -12,7 +12,7 @@ import { authOptions } from '@/lib/authoptions'
 import { getMyProducts } from '@/lib/productActions'
 import moment from 'moment'
 
-export default async function page () {
+export default async function Page () {
   const { user } = await getServerSession(authOptions)
   const { prods, userPayments, payementDetails } = await getMyProducts(
     user.email

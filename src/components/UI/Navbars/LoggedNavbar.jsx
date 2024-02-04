@@ -54,7 +54,7 @@ export const LoggedNavbar = () => {
           {showSubMenu && (
             <div className={styles.submenu} id='submenu'>
               <ul>
-                <li onClick={() => router.push(session.user.role=='admin'?'/admin':'/dashboard')}>Dashboard</li>
+                <li onClick={() => router.push(session.user.role=='admin'?'/admin/users':'/dashboard')}>Dashboard</li>
                 <li>
                   <div className={styles.logout} onClick={() => signOut()}>
                     Log out <i className='bi bi-arrow-bar-right'></i>

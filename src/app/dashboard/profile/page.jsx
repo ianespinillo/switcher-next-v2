@@ -3,7 +3,7 @@ import { authOptions } from '@/lib/authoptions'
 import { getServerSession } from 'next-auth'
 import React from 'react'
 
-export default async function page () {
+export default async function Page () {
   const user = await getServerSession(authOptions)
   
   return (
