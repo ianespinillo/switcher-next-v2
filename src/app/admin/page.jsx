@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Index ({ Component, pageProps }) {
+export function Index () {
   return (
     <>
       
