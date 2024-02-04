@@ -10,7 +10,7 @@ export default async function index ({ params: { ConfedName } }) {
     <>
       <header>
         <div className='flex justify-center items-center gap-8 p-2'>
-          <img src={confed.img_url} alt='Confederation logo' />
+          <img src={confed.img_url} alt='Confederation logo' className='max-w-[300px]' />
           <h1 className='text-6xl text-qatar-gold qatar mt-2'>{ConfedName}</h1>
         </div>
       </header>
@@ -35,4 +35,15 @@ export default async function index ({ params: { ConfedName } }) {
       </div>
     </>
   )
+}
+
+export async function generateMetadata({ params: { ConfedName } }) {
+  const {confed_3, img_url} = await getConfed(ConfedName)
+  return {
+    title: confed_3,
+    icons: {
+      icon: img_url
+    }
+  }
+  
 }

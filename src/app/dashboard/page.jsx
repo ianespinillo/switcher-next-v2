@@ -1,10 +1,14 @@
 import React from 'react'
 
-export default function page() {
+import { authOptions } from '@/lib/authoptions'
+import { getServerSession } from 'next-auth'
+
+export default async function page() {
+  const { user } = await getServerSession(authOptions)
   return (
     <div className='ml-44'>
       <div>
-        <h1>My Products</h1>
+        <h1>Welcome {user.name}</h1>
       </div>
     </div>
   )

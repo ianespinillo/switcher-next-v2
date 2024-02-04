@@ -20,11 +20,11 @@ export const Navbar = () => {
   
   const { data: session, status } = useSession()
   const isLogged = status === 'authenticated'
-  
+  const publicRoutes=['custom-job', 'contact', 'checkout', 'admin']
   useEffect(() => {
     const path = location.split('/')
     if (document.getElementById('navBar')) {
-        if (path[1] !== '' && path.length == 2) {
+        if (path[1] !== '' && path.length == 2 && !publicRoutes.some(route=>path.includes(route))) {
           document.body.removeAttribute('class')
         document.body.classList.add(styles[path[1]], confedStyles[path[1]])
         if (document.getElementById('submenu')) {

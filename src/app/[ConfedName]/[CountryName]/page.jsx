@@ -38,3 +38,13 @@ export default async function page ({ params: { ConfedName, CountryName } }) {
     </>
   )
 }
+
+export async function generateMetadata ({ params: { CountryName } }) {
+  const { countryId } = await filterByCountry(CountryName)
+  return {
+    title: countryId.name,
+    icons:{
+      icon: countryId.country_not_name_img
+    }
+  }
+}

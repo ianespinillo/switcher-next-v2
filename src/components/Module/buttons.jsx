@@ -7,14 +7,14 @@ import Tablestyles from '@/Styles/table.module.css'
 
 import { EditModal } from '../Modals/EditModal'
 import { filterProductById } from '@/lib/productActions'
-export const Buttons = () => {
+export const Buttons = ({id}) => {
   const [formValues, setFormValues] = useState({})
   const [editModalIsOpen, setEditModalIsOpen] = useState(false)
-  async function handleUpdate ({ target }) {
-    const id =
-    target.parentElement.parentElement.parentElement.childNodes[0].textContent
+  async function handleUpdate () {
+    
     await filterProductById(id)
     .then(values =>{
+      console.log(values)
       setFormValues({
         countryId: values.countryId,
         competitionName: values.name,
@@ -50,6 +50,7 @@ export const Buttons = () => {
         editModalIsOpen={editModalIsOpen}
         values={formValues}
         setEditModalIsOpen={setEditModalIsOpen}
+        id={id}
       />
     </>
   )

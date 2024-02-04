@@ -3,18 +3,18 @@
 import { PrismaClient } from '@prisma/client'
 //import prisma from './db'
 import { revalidatePath } from 'next/cache'
+//import prisma from './db'
 import { z } from 'zod'
 const prisma = new PrismaClient()
 
-export async function createConfederation (prevState, formValues,img_url) {
+export async function createConfederation (prevState, formValues, img_url) {
   const schema = z.object({
     ConfedName: z.string().nonempty(),
-    ConfedAbrev: z.string().nonempty(),
+    ConfedAbrev: z.string().nonempty()
   })
   const data = schema.safeParse({
     ConfedName: formValues.get('ConfedName'),
-    ConfedAbrev: formValues.get('ConfedAbrev'),
-    
+    ConfedAbrev: formValues.get('ConfedAbrev')
   })
 
   if (!data.success) {
@@ -22,7 +22,7 @@ export async function createConfederation (prevState, formValues,img_url) {
       message: 'All felds are required'
     }
   }
-  
+
   const { ConfedName, ConfedAbrev } = data.data
   const confedExist = await prisma.confederation.findFirst({
     where: {
@@ -47,21 +47,19 @@ export async function createCountry (prevState, formData, img_url, no_name_img) 
   const schema = z.object({
     confedId: z.string().nonempty(),
     countryName: z.string().nonempty(),
-    countryAbrev: z.string().nonempty(),
-    
+    countryAbrev: z.string().nonempty()
   })
   const success = schema.safeParse({
     confedId: formData.get('confedId'),
     countryName: formData.get('countryName'),
-    countryAbrev: formData.get('countryAbrev'),
-    
+    countryAbrev: formData.get('countryAbrev')
   })
   if (success.error) {
     return {
       message: 'All fields are required'
     }
   }
-  const { confedId, countryName, countryAbrev, } = success.data
+  const { confedId, countryName, countryAbrev } = success.data
 
   const countryExists = await prisma.country.findFirst({
     where: {
@@ -81,14 +79,19 @@ export async function createCountry (prevState, formData, img_url, no_name_img) 
   return { message: null }
 }
 
-export async function createCompetition (prevState, formData) {
+export async function createCompetition (
+  prevState,
+  formData,
+  preview,
+  logo,
+  big,
+  fifaproject
+) {
   console.log(formData)
   const schema = z.object({
     countryId: z.string().nonempty(),
     competitionName: z.string().nonempty(),
     competitionAbrev: z.string().nonempty(),
-    logoUrl: z.string().nonempty(),
-    previewUrl: z.string().nonempty(),
     price: z.string().nonempty(),
     compType: z.string().nonempty(),
     desc: z.string().nonempty()
@@ -97,8 +100,6 @@ export async function createCompetition (prevState, formData) {
     countryId: formData.get('countryId'),
     competitionName: formData.get('competitionName'),
     competitionAbrev: formData.get('competitionAbrev'),
-    logoUrl: formData.get('logoUrl'),
-    previewUrl: formData.get('previewUrl'),
     price: formData.get('price'),
     compType: formData.get('compType'),
     desc: formData.get('desc')
@@ -108,8 +109,6 @@ export async function createCompetition (prevState, formData) {
     countryId,
     competitionAbrev,
     competitionName,
-    logoUrl,
-    previewUrl,
     price,
     compType,
     desc
@@ -125,11 +124,13 @@ export async function createCompetition (prevState, formData) {
       description: desc,
       name: competitionName,
       price: parseFloat(price),
-      logo_url: logoUrl,
-      preview_url: previewUrl,
+      logo_url: logo,
+      preview_url: preview,
       type: compType,
       countryId: Number(countryId),
-      name_3: competitionAbrev
+      name_3: competitionAbrev,
+      big_url: big,
+      fifaproject_url: fifaproject
     }
   })
   revalidatePath('admin/products')
@@ -155,11 +156,14 @@ export async function obtainProducts () {
 
 export async function obtainConfederations () {
   const confedList = await prisma.confederation.findMany()
+  // ordenar alfabeticamente por confederacion
+  confedList.sort((a, b) => (a.confed_3 > b.confed_3 ? 1 : -1))
   return confedList
 }
 
 export async function obtainCountries () {
   const countriesList = await prisma.country.findMany()
+  countriesList.sort((a, b) => (a.name > b.name ? 1 : -1))
   return countriesList
 }
 
@@ -175,6 +179,7 @@ export async function filterByConfed (confed) {
         confederation_id: confederation.id
       }
     })
+    countries.sort((a, b) => (a.name > b.name ? 1 : -1))
     return countries
   }
 }
@@ -227,10 +232,10 @@ export async function getMyProducts (email) {
     select: {
       id: true,
       amount: true,
-      method: true,
+      method: true
     }
   })
-  if(!userPayments) return null
+  if (!userPayments) return null
   const paymentIds = userPayments.map(payment => payment.id)
   const payementDetails = await prisma.payement_detail.findMany({
     where: {
@@ -243,10 +248,10 @@ export async function getMyProducts (email) {
       payementId: true
     }
   })
-  if(!payementDetails) return null
+  if (!payementDetails) return null
   const productIds = payementDetails.map(detail => detail.productId)
   const uniqueProductIds = [...new Set(productIds)]
-  const prods= await prisma.product.findMany({
+  const prods = await prisma.product.findMany({
     where: {
       id: {
         in: uniqueProductIds
@@ -279,4 +284,107 @@ export async function productIsBuyed (prodId, user_email) {
     })
 
   return payementDetails.some(detail => detail.productId === prodId)
+}
+
+export async function updateProduct (
+  prevState,
+  formData,
+  preview,
+  logo,
+  big,
+  fifaproject,
+  id
+) {
+  const schema = z.object({
+    countryId: z.string().nonempty(),
+    competitionName: z.string().nonempty(),
+    competitionAbrev: z.string().nonempty(),
+    price: z.string().nonempty(),
+    compType: z.string().nonempty(),
+    desc: z.string().nonempty()
+  })
+  const result = schema.safeParse({
+    countryId: formData.get('countryId'),
+    competitionName: formData.get('competitionName'),
+    competitionAbrev: formData.get('competitionAbrev'),
+    price: formData.get('price'),
+    compType: formData.get('compType'),
+    desc: formData.get('desc')
+  })
+  if (result.error) return { message: 'All fields are required' }
+  const {
+    countryId,
+    competitionAbrev,
+    competitionName,
+    price,
+    compType,
+    desc
+  } = result.data
+  const competition = await prisma.product.findFirst({
+    where: {}
+  })
+  await prisma.product.update({
+    where: {
+      id
+    },
+    data: {
+      description: desc,
+      name: competitionName,
+      price: parseFloat(price),
+      logo_url: logo,
+      preview_url: preview,
+      type: compType,
+      countryId: Number(countryId),
+      name_3: competitionAbrev,
+      big_url: big,
+      fifaproject_url: fifaproject
+    }
+  })
+  revalidatePath('admin/products')
+  return { message: null }
+}
+
+export async function getPayments () {
+  //recuperar todos los pagos y retornar un array con objetos tipo [{user_email, amount, state, products_name}]
+  //del pago extaer el amount, email, y estado
+  const pagos = await prisma.payement.findMany({
+    select:{
+      user_email: true,
+      amount: true,
+      state: true,
+      id: true,
+    }
+  })
+  const paymetsIds = pagos.map(pago=>pago.id)
+  const paymetsDetails = await prisma.payement_detail.findMany({
+    where:{
+      payementId:{
+        in: paymetsIds
+      }
+    }
+  })
+  const productsIds = paymetsDetails.map(detail=>detail.productId)
+  const products = await prisma.product.findMany({
+    where:{
+      id:{
+        in: productsIds
+      }
+    }
+  })
+  // Crear un array con objetos tipo [{user_email, amount, state, products_name}]
+  const payments = pagos.map(pago => {
+    const details = paymetsDetails.filter(detail => detail.payementId === pago.id);
+    const productsNames = details.map(detail => {
+      const product = products.find(prod => prod.id === detail.productId);
+      return product.name;
+    });
+    return {
+      user_email: pago.user_email,
+      amount: pago.amount,
+      state: pago.state,
+      products: productsNames
+    };
+  });
+  
+  return payments
 }

@@ -41,7 +41,7 @@ export const StockTable = async ({
                 <TableCell key={data.name}>{data.name}</TableCell>
                 <TableCell>{data.countryName}</TableCell>
                 <TableCell>
-                  <Buttons />
+                  <Buttons id={data.id} />
                 </TableCell>
               </TableRow>
             ))
@@ -52,20 +52,17 @@ export const StockTable = async ({
               <TableCell>-</TableCell>
               <TableCell>
                 <div className={Tablestyles.buttoncontainer}>
-                  {btns.map((btn, i) => (
-                    <button key={i} className={Tablestyles[btn]}>
-                      <IconContext.Provider
-                        value={{ style: { verticalAlign: 'middle' } }}
-                      >
+                  {btns &&
+                    btns.map((btn, i) => (
+                      <button key={i} className={Tablestyles[btn]}>
                         {btn}{' '}
                         {btn == 'Delete' ? (
                           <BiTrash fontSize={18} />
                         ) : btn == 'Update' ? (
                           <BiPen fontSize={18} />
                         ) : null}
-                      </IconContext.Provider>
-                    </button>
-                  ))}
+                      </button>
+                    ))}
                 </div>
               </TableCell>
             </TableRow>

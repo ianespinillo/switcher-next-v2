@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import Modal from 'react-modal'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 import { IoPersonCircle, IoTrashBin, IoTrashBinSharp } from 'react-icons/io5'
 import { IoIosArrowDown, IoIosCloseCircle } from 'react-icons/io'
@@ -18,6 +18,7 @@ import { MdOutlineShoppingCartCheckout } from 'react-icons/md'
 export const LoggedNavbar = () => {
   Modal.setAppElement('#__next')
   const router = useRouter()
+  const {data:session} = useSession()
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [cartSize, deleteItem, cart, total, resetCart] = cartStore(state => [
@@ -27,6 +28,7 @@ export const LoggedNavbar = () => {
     state.total,
     state.resetCart
   ])
+  
   function handleDelete (prod) {
     deleteItem(prod)
   }
@@ -52,7 +54,7 @@ export const LoggedNavbar = () => {
           {showSubMenu && (
             <div className={styles.submenu} id='submenu'>
               <ul>
-                <li onClick={() => router.push('/dashboard')}>Dashboard</li>
+                <li onClick={() => router.push(session.user.role=='admin'?'/admin':'/dashboard')}>Dashboard</li>
                 <li>
                   <div className={styles.logout} onClick={() => signOut()}>
                     Log out <i className='bi bi-arrow-bar-right'></i>

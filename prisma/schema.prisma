@@ -102,6 +102,8 @@ model Product {
   type            String
   description     String
   logo_url        String
+  big_url         String
+  fifaproject_url String
   country         Country           @relation(fields: [countryId], references: [id])
   countryId       Int
   Payement_detail Payement_detail[]

@@ -1,13 +1,11 @@
 import paypal from '@paypal/checkout-server-sdk'
 import { NextResponse } from 'next/server'
 
-const REST_API = process.env.PAYPAL_REST_API
-const SECRET_KEY = process.env.PAYPAL_SECRET_KEY
 
 
-const enviroment = new paypal.core.SandboxEnvironment(
-  'AYaZ--mpticcxqgFYBUE5KTMN0vN5yykRPYBOeZ-sMDYkpnhnv_SAOX3oGRFcWz_w7g3Ds6BwWmSA1jq',
-  'EK8RuvgmbVJmsxEcs23tf-I5popkjR6WCp2TksGnFjuE-8LaaqZEWo47R1-9ftBhDokNqg9lwKv7LI6X'
+const enviroment = new paypal.core.LiveEnvironment(
+  process.env.PAYPAL_CLIENT_ID,
+  process.env.PAYPAL_SECRET_KEY
 )
 const client = new paypal.core.PayPalHttpClient(enviroment)
 export async function POST (req, res) {
@@ -24,12 +22,12 @@ export async function POST (req, res) {
         currency_code: 'USD',
         value: `${parseFloat(item.price)}`
       },
-      description: item.description,
-    })),
+      description: item.description
+    }))
   })
 
   const response = await client.execute(orders)
-  
+
   return NextResponse.json({
     id: response.result.id,
     result: response.result

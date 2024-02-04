@@ -26,10 +26,12 @@
     "react-icons": "^4.12.0",
     "react-modal": "^3.16.1",
     "react-select": "^5.8.0",
+    "resend": "^3.1.0",
     "zod": "^3.22.4",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@types/paypal__checkout-server-sdk": "^1.0.8",
     "@types/react-dom": "^18.2.18",
     "@types/react-modal": "^3.16.3",
     "autoprefixer": "^10.4.16",

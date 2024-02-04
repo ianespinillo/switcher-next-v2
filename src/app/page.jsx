@@ -1,21 +1,14 @@
 
 import React from 'react'
 import Link from 'next/link'
-
+import Icon from '../../public/Logo_2024.ico';
 import { obtainConfederations } from '@/lib/productActions'
 
 
 
 export default async function page ({ searchParams }) {
   const confederations = await obtainConfederations()
-  
-  
-  if (
-    searchParams.collection_status &&
-    searchParams.collection_status == 'approved'
-  ) {
-    
-  }
+
   return (
     <>
       <div className='grilla'>
@@ -32,4 +25,12 @@ export default async function page ({ searchParams }) {
       </div>
     </>
   )
+}
+
+
+export const metadata = {
+  title: 'Scoreboard Switcher',
+  icons: {
+    icon: '/Logo_2024.ico',
+  },
 }

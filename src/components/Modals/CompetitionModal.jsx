@@ -54,12 +54,15 @@ export const CompetitionModal = ({
   const initialState = {
     messages: null
   }
-  async function serverAc (prevState, formData) {
-    const res = await createCompetition(prevState, formData)
-    res?.message == null ? closeModal() : res
-  }
-  const [options, setOptions] = useState([])
+  const [Files, setFiles] = useState({
+    big: null,
+    fifaproject: null,
+    logo: null,
+    preview: null
+  })
+  const { big, fifaproject, logo, preview } = Files
   const [state, formAction] = useFormState(serverAc, initialState)
+  const [options, setOptions] = useState([])
   const { edgestore } = useEdgeStore()
   const [
     formValues,
@@ -73,52 +76,45 @@ export const CompetitionModal = ({
     competitionAbrev,
     logoUrl,
     previewUrl,
+    bigFile,
+    fifaprojectFile,
     price,
     compType,
     desc
   } = formValues
-  const [{ big, fifaproject, logo, preview }, setFiles] = useState({
-    big: null,
-    fifaproject: null,
-    logo: null,
-    preview: null
-  })
-  ReactModal.setAppElement('#__next')
-  // hacer un efecto que cargue los archivos a edgestore y retorne la url en el formValues, debe observar cual cambio
+  
+  async function serverAc (prevState, formData) {
+    const res = await createCompetition(prevState, formData, previewUrl, logoUrl, bigFile, fifaprojectFile)
+    res.message == null && closeModal() 
+    return res
+  }
+  //ReactModal.setAppElement('#__next')
+  
   useEffect(() => {
-    if (big) {
-      console.log('big')
-      edgestore.publicFiles
-        .upload({
-          file: big
-        })
-        .then(res => setFormValues({ ...formValues, bigFile: res.url }))
-    }
-    if (fifaproject) {
-      console.log('fifaproject')
-      edgestore.publicFiles
-        .upload({
-          file: fifaproject
-        })
-        .then(res => setFormValues({ ...formValues, fifaprojectFile: res.url }))
-    }
-    if (logo) {
-      console.log('logo')
-      edgestore.publicFiles
-        .upload({
-          file: logo
-        })
-        .then(res => setFormValues({ ...formValues, logoUrl: res.url }))
-    }
-    if (preview) {
-      console.log('preview')
-      edgestore.publicFiles
-        .upload({
-          file: preview
-        })
-        .then(res => setFormValues({ ...formValues, previewUrl: res.url }))
-    }
-  }, [big, fifaproject, logo, preview])
+    big && edgestore.publicFiles.upload({
+      file: big,
+    })
+      .then(res => setFormValues({ ...formValues, bigFile: res.url }))
+  }, [big])
+  useEffect(() => {
+    fifaproject && edgestore.publicFiles.upload({
+      file: fifaproject,
+    })
+      .then(res => setFormValues({ ...formValues, fifaprojectFile: res.url }))
+  }, [fifaproject])
+  useEffect(() => {
+    preview && edgestore.publicFiles.upload({
+      file: preview,
+    })
+      .then(res => setFormValues({ ...formValues, previewUrl: res.url }))
+  }, [preview])
+  useEffect(() => {
+    logo && edgestore.publicFiles.upload({
+      file: logo,
+    })
+      .then(res => setFormValues({ ...formValues, logoUrl: res.url }))
+  },[logo])
+  
   function closeModal () {
     setOptions([])
     reset()

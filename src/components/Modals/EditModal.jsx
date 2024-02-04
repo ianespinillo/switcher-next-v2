@@ -8,6 +8,9 @@ import { IoIosAddCircle, IoIosCloseCircle } from 'react-icons/io'
 import modalStyle from '@/Styles/modal.module.css'
 import { IconContext } from 'react-icons'
 import { useForm } from '@/hooks/useForm'
+import { useFormState } from 'react-dom'
+import { obtainCountries, updateProduct } from '@/lib/productActions'
+import { useEdgeStore } from '@/lib/utils/edgestore'
 
 const selectStyles = {
   control: (baseStyles, state) => ({
@@ -45,13 +48,24 @@ const initFormValues = {
   desc: ''
 }
 
-export const EditModal = ({ values, editModalIsOpen, setEditModalIsOpen }) => {
+export const EditModal = ({
+  values,
+  editModalIsOpen,
+  setEditModalIsOpen,
+  id
+}) => {
   //ReactModal.setAppElement('#__next')
-  console.log(values)
+  const { edgestore } = useEdgeStore()
+  const [options, setOptions] = useState([])
+
   useEffect(() => {
-    if(values != undefined) setValues(values)
+    if (values != undefined) {
+      setValues(values)
+      console.log(values)
+    }
   }, [values])
-  const [formValues, handleInputChange, handleSelectChange, , setValues] =
+
+  const [formValues, handleInputChange, handleSelectChange, reset, setValues] =
     useForm({
       countryId: '',
       competitionName: '',
@@ -62,23 +76,90 @@ export const EditModal = ({ values, editModalIsOpen, setEditModalIsOpen }) => {
       compType: '',
       desc: ''
     })
-  const [options, setOptions] = useState([])
+
   const {
     competitionName,
     competitionAbrev,
     logoUrl,
     previewUrl,
+    bigFile,
+    fifaprojectFile,
     price,
     compType,
     desc
   } = formValues
-  function afterOpenModal () {}
-  const closeModal = () => setEditModalIsOpen(false)
-  const handleUpdate = e => {
-    e.preventDefault()
-    console.log(values)
+  async function afterOpenModal () {
+    const options = await obtainCountries()
+    options.map(country => {
+      setOptions(options => [
+        ...options,
+        { label: country.name, value: country.id }
+      ])
+    })
   }
+  const closeModal = () => {
+    setOptions([])
+    reset()
+    setEditModalIsOpen(false)
+  }
+  const [Files, setFiles] = useState({
+    big: null,
+    fifaproject: null,
+    logo: null,
+    preview: null
+  })
+  const { big, fifaproject, logo, preview } = Files
 
+  const initState = {
+    message: null
+  }
+  const actualCountry = options.find(
+    option => option.value === values.countryId
+  )
+  function serverAc (prevState, formData) {
+    updateProduct(
+      prevState,
+      formData,
+      previewUrl,
+      logoUrl,
+      bigFile,
+      fifaprojectFile,
+      id
+    ).then(res=> !res.message && closeModal())
+  }
+  const [state, formAction] = useFormState(serverAc, initState)
+  useEffect(() => {
+    big &&
+      edgestore.publicFiles
+        .upload({
+          file: big
+        })
+        .then(res => setValues({ ...formValues, bigFile: res.url }))
+  }, [big])
+  useEffect(() => {
+    fifaproject &&
+      edgestore.publicFiles
+        .upload({
+          file: fifaproject
+        })
+        .then(res => setValues({ ...formValues, fifaprojectFile: res.url }))
+  }, [fifaproject])
+  useEffect(() => {
+    preview &&
+      edgestore.publicFiles
+        .upload({
+          file: preview
+        })
+        .then(res => setValues({ ...formValues, previewUrl: res.url }))
+  }, [preview])
+  useEffect(() => {
+    logo &&
+      edgestore.publicFiles
+        .upload({
+          file: logo
+        })
+        .then(res => setValues({ ...formValues, logoUrl: res.url }))
+  }, [logo])
   return (
     <ReactModal
       isOpen={editModalIsOpen}
@@ -92,8 +173,9 @@ export const EditModal = ({ values, editModalIsOpen, setEditModalIsOpen }) => {
         <div className={modalStyle.icon}>
           <IoIosCloseCircle onClick={closeModal} />{' '}
         </div>
-        <form className={modalStyle.form} onSubmit={handleUpdate}>
+        <form className={modalStyle.form} action={formAction}>
           <h3>Add a Competition</h3>
+          <div className={modalStyle.messages}></div>
           <div className={modalStyle.grid}>
             <div>
               <div className={modalStyle.inputDiv}>
@@ -103,7 +185,9 @@ export const EditModal = ({ values, editModalIsOpen, setEditModalIsOpen }) => {
                 <Select
                   styles={selectStyles}
                   options={options}
+                  value={actualCountry}
                   onChange={e => handleSelectChange(e, 'countryId')}
+                  name='countryId'
                 />
               </div>
               <div className={modalStyle.inputDiv}>
@@ -133,12 +217,22 @@ export const EditModal = ({ values, editModalIsOpen, setEditModalIsOpen }) => {
               <div className={modalStyle.inputDiv}>
                 <label htmlFor='Url'>Logo Url</label>
                 <input
-                  type='url'
+                  type='file'
                   name='logoUrl'
-                  id='Url'
-                  placeholder='ImgURL: http://www.exampl...'
-                  value={logoUrl}
-                  onChange={handleInputChange}
+                  id=''
+                  onChange={e =>
+                    setFiles({ ...Files, logo: e.target.files[0] })
+                  }
+                  className='file:bg-transparent file:border-0'
+                />
+              </div>
+              <div className={modalStyle.inputDiv}>
+                <label htmlFor='big'>BIG File</label>
+                <input
+                  type='file'
+                  name='big'
+                  className='file:bg-transparent file:border-0'
+                  onChange={e => setFiles({ ...Files, big: e.target.files[0] })}
                 />
               </div>
             </div>
@@ -146,12 +240,12 @@ export const EditModal = ({ values, editModalIsOpen, setEditModalIsOpen }) => {
               <div className={modalStyle.inputDiv}>
                 <label htmlFor='Url'>Preview Url</label>
                 <input
-                  type='url'
+                  type='file'
                   name='previewUrl'
-                  id='Url'
-                  placeholder='ImgURL: http://www.exampl...'
-                  value={previewUrl}
-                  onChange={handleInputChange}
+                  onChange={e =>
+                    setFiles({ ...Files, preview: e.target.files[0] })
+                  }
+                  className='file:bg-transparent file:border-0'
                 />
               </div>
               <div className={modalStyle.inputDiv}>
@@ -178,12 +272,24 @@ export const EditModal = ({ values, editModalIsOpen, setEditModalIsOpen }) => {
               </div>
               <div className={modalStyle.inputDiv}>
                 <label htmlFor='Desc'>Competition Description</label>
-                <textarea
+                <input
+                  type='text'
                   name='desc'
                   id='Desc'
                   placeholder='First league of Argentine'
                   value={desc}
                   onChange={handleInputChange}
+                />
+              </div>
+              <div className={modalStyle.inputDiv}>
+                <label htmlFor='fifaproject'>Fifaproject</label>
+                <input
+                  type='file'
+                  name='fifaproject'
+                  className='file:bg-transparent file:border-0'
+                  onChange={e =>
+                    setFiles({ ...Files, fifaproject: e.target.files[0] })
+                  }
                 />
               </div>
             </div>

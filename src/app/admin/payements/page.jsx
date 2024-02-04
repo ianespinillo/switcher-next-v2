@@ -1,11 +1,14 @@
-'use client'
+
 
 import { PayementsTable } from '@/components/UI/PayementsTable'
+import { getPayments } from '@/lib/productActions'
 import React from 'react'
 
-export default function index() {
+export default async function index() {
+  const payments = await getPayments()
+  
   return (
-    <PayementsTable />
+    <PayementsTable paymemts={payments} />
   )
 }
 

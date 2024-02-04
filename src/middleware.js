@@ -3,13 +3,13 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
-  function middleware(req) {
-    console.log(req.nextauth);
+  async function middleware(req) {
+    console.log(req.nextauth.token);
     if (
       req.nextUrl.pathname === "/admin/dashboard" &&
       req.nextauth.token?.role !== "admin"
     ) {
-      return new NextResponse("You are not authorized!");
+      return new NextResponse.redirect('/')
     }
   },
   {
@@ -22,4 +22,4 @@ export default withAuth(
   }
 );
 
-export const config = { matcher: ["/admin/dashboard"] };
+export const config = { matcher: ["/admin/:path", "/dashboard", "/checkout", "/dashboard/:path*" ] };

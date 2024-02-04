@@ -1,17 +1,14 @@
-/**
- * Render the sidebar component for the dashboard navigation.
- *
- * @param {Object} props - The component props.
- * @param {ReactNode} props.children - The child elements.
- * @returns {ReactNode} - The rendered sidebar component.
- */
+
 
 import { CreditCardIcon, UsersIcon } from '@/components/icons/Icons'
+import { getServerSession } from 'next-auth';
 import Link from 'next/link'
 import { LuPackage } from 'react-icons/lu'
 import { MdOutlineLogout } from 'react-icons/md'
 import { PiShoppingBagFill } from "react-icons/pi";
+import { authOptions } from '../../lib/authoptions';
 export default function Sidebar ({ children }) {
+  
   return (
     <>
       {/* Navigation */}
