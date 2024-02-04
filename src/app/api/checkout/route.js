@@ -13,7 +13,7 @@ export async function POST (req, res) {
   const orders = new paypal.orders.OrdersCreateRequest()
   orders.requestBody({
     application_context: {
-      return_url: 'https://scoreboard-switcher.vercel.app/success'
+      return_url: process.env.NEXTAUTH_URL + '/success'
     },
     intent: 'CAPTURE',
     purchase_units: cart.map(item => ({

@@ -22,7 +22,7 @@ export async function POST (req, res) {
         unit_price: parseFloat(item.price)
       })),
       back_urls: {
-        success: 'https://scoreboard-switcher.vercel.app/success'
+        success: process.env.NEXTAUTH_URL + '/success'
         /* failure: "http://www.tu-sitio/failure",
           pending: "http://www.tu-sitio/pending" */
       },
