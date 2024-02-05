@@ -9,8 +9,9 @@ import Link from 'next/link'
 export default async function Page ({ params: { ProdName } }) {
   const name = ProdName.split('%20').join(' ')
   const product = await filterProduct(name)
-  const { user } = await getServerSession(authOptions)
-  const prodIsBuyed = await productIsBuyed(product.id, user.email)
+  const session  = await getServerSession(authOptions)
+  console.log(session )
+  const prodIsBuyed = session? await productIsBuyed(product.id, session.user.email): false
 
   return (
     <div className={styles.container}>
