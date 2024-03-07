@@ -155,9 +155,11 @@ export async function obtainProducts () {
 }
 
 export async function obtainConfederations () {
-  const confedList = await prisma.confederation.findMany()
-  // ordenar alfabeticamente por confederacion
-  confedList.sort((a, b) => (a.confed_3 > b.confed_3 ? 1 : -1))
+  const confedList = await prisma.confederation.findMany({
+    orderBy: {
+      confed_3: 'asc'
+    }
+  })
   return confedList
 }
 

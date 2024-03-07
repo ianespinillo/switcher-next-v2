@@ -43,7 +43,7 @@ export default function EditProfile ({ user: { user } }) {
     }
   }, [file])
   return (
-    <form className='flex flex-col gap-4 qatar w-1/3' onSubmit={handleSubmit}>
+    <form className='flex flex-col gap-4 qatar w-7/12 md:w-1/3' onSubmit={handleSubmit}>
       {error.state && <p className='text-red-500 p-3'>{error.msg}</p>}
       <div className=' flex flex-col gap-1'>
         <label className='text-qatar-gold' htmlFor='name'>

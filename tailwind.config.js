@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const withTM = require('@material-tailwind/react/utils/withMT')
+module.exports = withTM({
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -16,5 +17,9 @@ module.exports = {
       },
     },
   },
+  corePlugins: {
+    textOpacity: true,
+    backgroundClip: true,
+  },
   plugins: [],
-}
+})

@@ -16,7 +16,8 @@ export default async function RootLayout ({ children }) {
 
   return (
     <html lang='en' id='__next'>
-      <body>
+      <body className='w-full h-full'>
+        
         <EdgeStoreProvider>
           <Provider>
             <Navbar />

@@ -1,26 +1,32 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import Modal from 'react-modal'
 import { signOut, useSession } from 'next-auth/react'
 
 import { IoPersonCircle, IoTrashBin, IoTrashBinSharp } from 'react-icons/io5'
-import { IoIosArrowDown, IoIosCloseCircle } from 'react-icons/io'
+import { IoIosArrowDown, IoIosCloseCircle, IoMdMenu } from 'react-icons/io'
 import { IconContext } from 'react-icons'
 import { LuShoppingCart } from 'react-icons/lu'
 
 import { modalStyles } from '@/lib/custom-styles'
-import { cartStore } from '@/app/store/cartstore'
-import styles from '@/Styles/Navbar.module.css'
-import { useRouter } from 'next/navigation'
+import { cartStore } from '@/store/cartstore'
+
+import { usePathname, useRouter } from 'next/navigation'
 import { MdOutlineShoppingCartCheckout } from 'react-icons/md'
+import { RxCross1 } from 'react-icons/rx'
 
 export const LoggedNavbar = () => {
   Modal.setAppElement('#__next')
   const router = useRouter()
-  const {data:session} = useSession()
+  const path= usePathname().split('/')
+  const confed = path[1]
+
+  const { data: session } = useSession()
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [isToggle, setIsToggle] = useState(false)
   const [cartSize, deleteItem, cart, total, resetCart] = cartStore(state => [
     state.cartSize,
     state.deleteItem,
@@ -28,48 +34,146 @@ export const LoggedNavbar = () => {
     state.total,
     state.resetCart
   ])
-  
+
   function handleDelete (prod) {
     deleteItem(prod)
   }
   function closeModal () {
     setModalIsOpen(false)
   }
+  const handleClick = () => {
+    setIsToggle(!isToggle)
+  }
   return (
-    <nav className={styles.navBar} id='navBar'>
-      <ul className={styles['navbar-ul']}>
-        <li onClick={() => router.push('/contact')}>Contact</li>
-        <li onClick={() => router.push('/custom-job')}>Custom Job</li>
+    <nav id='navBar'>
+      <div
+        className={`z-50 w-full h-full min-h-screen  fixed backdrop-blur-lg transition-transform ease-in duration-300 ${
+          isToggle ? 'translate-x-0' : '-translate-x-full'
+        }
+        ${
+          path.length < 3 && confed === 'AFC'
+            ? 'bg-[#00328d]/70'
+            : path.length < 3 && confed == 'CONMEBOL'
+            ? 'bg-[#003874]/70'
+            : path.length < 3 && confed == 'CAF'
+            ? 'bg-[#018839]/70'
+            : path.length < 3 && confed == 'CONCACAF'
+            ? 'bg-[#c99e53]/70'
+            : path.length < 3 && confed == 'OFC'
+            ? 'bg-[#0067e5]/70'
+            : path.length < 3 && confed == 'UEFA'
+            ? 'bg-[#0a30ba]/70'
+            : path.length < 3 && confed == 'FIFA'
+            ? 'bg-[#003870]/70'
+            : 'bg-qatar-purple/70'
+        }
+        `}
+      >
         <div
-          className={styles['icon-container']}
-          onMouseEnter={e => setShowSubMenu(true)}
-          onMouseLeave={e => setShowSubMenu(false)}
+          className={`px-5 flex justify-between items-center ${
+            path.length < 3 && confed == 'AFC'
+              ? 'text-white'
+              : path.length < 3 && confed == 'CAF'
+              ? 'text-[#f3ca0c]'
+              : path.length < 3 && confed == 'CONMEBOL'
+              ? 'text-[#c99e53]'
+              : path.length < 3 && confed == 'OFC'
+              ? 'text-white'
+              : path.length < 3 && confed == 'UEFA'
+              ? 'text-white'
+              : path.length < 3 && confed == 'CONCACAF'
+              ? 'text-black'
+              : path.length < 3 && confed == 'FIFA'
+              ? 'text-white'
+              : 'text-qatar-gold'
+          }`}
         >
-          <IconContext.Provider
-            value={{ style: { verticalAlign: 'middle', cursor: 'pointer' } }}
+          <h3 className='text-3xl qatar p-1.5'>Menú</h3>
+          <RxCross1 size={30} className='p-1 ' onClick={handleClick} />
+        </div>
+        <ul
+          className={`flex flex-col items-center gap-2 p-3 qatar 
+          ${
+            path.length < 3 && confed == 'AFC'
+              ? 'text-white'
+              : path.length < 3 && confed == 'CAF'
+              ? 'text-[#f3ca0c]'
+              : path.length < 3 && confed == 'CONMEBOL'
+              ? 'text-[#c99e53]'
+              : path.length < 3 && confed == 'OFC'
+              ? 'text-white'
+              : path.length < 3 && confed == 'UEFA'
+              ? 'text-white'
+              : path.length < 3 && confed == 'CONCACAF'
+              ? 'text-black'
+              : path.length < 3 && confed == 'FIFA'
+              ? 'text-white'
+              : 'text-qatar-gold'
+          }
+          
+        `}
+        >
+          <Link href={'/contact'}>Contact</Link>
+          <Link href={'/custom-job'}>Custom Job</Link>
+          <Link href={'/switcher'}>Switcher App</Link>
+          <Link
+            className='flex items-center gap-2'
+            href={session.user.role == 'admin' ? '/admin/users' : '/dashboard'}
+          >
+            <IoPersonCircle size={24} /> Dashboard
+          </Link>
+          <button onClick={() => signOut()}>Logout</button>
+        </ul>
+      </div>
+      <div className='pl-6 flex h-[76px] items-center sm:hidden fixed z-40'>
+        <button
+          className='bg-transparent text-4xl block md:hidden'
+          onClick={handleClick}
+        >
+          <IoMdMenu  />
+        </button>
+      </div>
+      <ul
+        className={`qatar hidden sm:flex  gap-5 sm:justify-end sm:p-3 items-center`}
+      >
+        <Link href={'/contact'}>Contact</Link>
+        <Link href={'/custom-job'}>Custom Job</Link>
+        <Link href={'/switcher'}>Switcher App</Link>
+
+        <div className='relative flex flex-col items-center rounded-lg'>
+          <button
+            className='flex items-center gap-1'
+            onClick={() => setShowSubMenu(!showSubMenu)}
           >
             <IoPersonCircle size={24} />
             <IoIosArrowDown size={24} />
-          </IconContext.Provider>
-          {showSubMenu && (
-            <div className={styles.submenu} id='submenu'>
-              <ul>
-                <li onClick={() => router.push(session.user.role=='admin'?'/admin/users':'/dashboard')}>Dashboard</li>
-                <li>
-                  <div className={styles.logout} onClick={() => signOut()}>
-                    Log out <i className='bi bi-arrow-bar-right'></i>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          )}
+          </button>
+          <div
+            className={`absolute bg-qatar-gold text-qatar-purple top-8 p-5 flex flex-col gap-2 rounded-xl transition-transform ease-in duration-300 ${
+              showSubMenu ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
+            style={{
+              transitionProperty: 'transform, opacity',
+              transitionDuration: '300ms',
+              transformOrigin: 'top center'
+            }}
+          >
+            <Link
+              href={
+                session.user.role === 'admin' ? '/admin/users/' : '/dashboard'
+              }
+            >
+              Dashboard
+            </Link>
+            <button onClick={() => signOut()}>Logout</button>
+          </div>
         </div>
         <div
-          className={styles['icon-container']}
+          className='flex gap-1.5 items-center text-center cursor-pointer'
           onClick={() => setModalIsOpen(true)}
         >
-          <LuShoppingCart className={styles.icon} />{' '}
-          <span id={styles.cartSize}>{cartSize}</span>
+          <LuShoppingCart size={24} />{' '}
+          <span className='text-[20px] mt-2'>{cartSize}</span>
         </div>
       </ul>
       <Modal
@@ -122,11 +226,11 @@ export const LoggedNavbar = () => {
           </tfoot>
         </table>
         <div className='w-full flex justify-center p-3 gap-3'>
-          <button 
+          <button
             className='bg-qatar-gold text-qatar-purple qatar rounded-lg flex items-center gap-1.5 p-1.5'
-            onClick={() =>{ 
+            onClick={() => {
               router.push('/checkout')
-              setModalIsOpen(false); //
+              setModalIsOpen(false) //
             }}
           >
             Go to checkout

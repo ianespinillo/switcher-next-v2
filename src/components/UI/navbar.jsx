@@ -3,10 +3,10 @@
 import { signOut, useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import React, { useContext, useEffect, useState } from 'react'
-import styles from '@/Styles/Navbar.module.css'
 import confedStyles from '@/Styles/Confederacion.module.css'
 import { LoggedNavbar } from './Navbars/LoggedNavbar'
 import { UnloggedNavbar } from './Navbars/UnloggedNavbar'
+import styles from '@/Styles/Navbar.module.css'
 
 
 
@@ -20,8 +20,9 @@ export const Navbar = () => {
   
   const { data: session, status } = useSession()
   const isLogged = status === 'authenticated'
-  const publicRoutes=['custom-job', 'contact', 'checkout', 'admin']
+  const publicRoutes=['custom-job', 'contact', 'checkout', 'admin', 'switcher']
   useEffect(() => {
+    
     const path = location.split('/')
     if (document.getElementById('navBar')) {
         if (path[1] !== '' && path.length == 2 && !publicRoutes.some(route=>path.includes(route))) {
@@ -43,7 +44,7 @@ export const Navbar = () => {
       }
     }
   }, [location])
-  if (!location.includes('auth' || 'admin')) {
+  if (!location.includes('auth' || 'admin' || 'dashboard')) {
     if (!isLogged) {
       return <UnloggedNavbar />
     } else {

@@ -5,7 +5,7 @@ import { IoTrashBin } from 'react-icons/io5'
 import moment from 'moment'
 import { paypalPayement, createPayementDetail } from '../../lib/payementActions'
 import { useRouter } from 'next/navigation'
-import { cartStore } from '../../app/store/cartstore'
+import { cartStore } from '../../store/cartstore'
 import { useEffect, useState } from 'react'
 
 export function CheckoutTable ({ email }) {
@@ -18,15 +18,15 @@ export function CheckoutTable ({ email }) {
 
   if (isClient) {
     return (
-      <div className='grid grid-cols-2'>
-        <div className='p-4'>
-          <table className='text-center w-full qatar mt-5'>
+      <div className='flex flex-col lg:flex-row'>
+        <div className='p-4 sm:basis-1/2'>
+          <table className='text-center w-full mt-5 qatar'>
             <thead className='bg-qatar-gold text-qatar-purple'>
               <tr>
-                <th className='w-[33%]'>Logo</th>
-                <th className='w-[33%]'>Name</th>
-                <th className='w-[33%]'>Price</th>
-                <th className='w-[1%]'></th>
+                <th className='px-2 py-3'>Logo</th>
+                <th className='px-2 py-3'>Name</th>
+                <th className='px-2 py-3'>Price</th>
+                <th className='px-2 py-3'></th>
               </tr>
             </thead>
             <tbody>
@@ -56,14 +56,17 @@ export function CheckoutTable ({ email }) {
             </tbody>
           </table>
         </div>
-        <div className='w-10/12 flex flex-col gap-3'>
+        <div className='w-full lg:w-10/12 flex flex-col gap-3 lg:basis-1/2 p-4'>
           <div className='flex flex-col gap-4 border-b-2 border-qatar-gold border-solid p-1'>
-            <h2 className='text-qatar-gold text-xl flex items-center justify-between '>
+            <h2 className='text-qatar-gold text-lg sm:text-xl flex items-center justify-between'>
               Taxes: (10%)
               <GoQuestion style={{ cursor: 'pointer', marginRight: '10px' }} />
             </h2>
-            <h1 className='text-qatar-gold text-2xl flex items-center justify-between'>
-              Total: <span className='ml-3'>${(total * 1.1).toFixed(2)}</span>
+            <h1 className='text-qatar-gold text-xl sm:text-2xl flex items-center justify-between'>
+              Total:{' '}
+              <span className='ml-3'>
+                ${(selectedSub.price * 1.1).toFixed(2)}
+              </span>
             </h1>
           </div>
           <PayPalScriptProvider

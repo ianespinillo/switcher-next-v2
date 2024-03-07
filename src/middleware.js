@@ -10,6 +10,8 @@ export default withAuth(
       req.nextauth.token?.role !== "admin"
     ) {
       return new NextResponse.redirect('/')
+    }else if(req.nextUrl.pathname === "/checkout-subscription" && !req.nextauth.token){
+      return new NextResponse.redirect('/')
     }
   },
   {
@@ -22,4 +24,4 @@ export default withAuth(
   }
 );
 
-export const config = { matcher: ["/admin/:path", "/dashboard", "/checkout", "/dashboard/:path*" ] };
+export const config = { matcher: ["/admin/:path", "/dashboard", "/checkout", "/dashboard/:path*", "/checkout-subscription" ] };

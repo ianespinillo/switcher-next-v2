@@ -30,7 +30,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/api/checkout/route.js"  ],
+, "src/app/api/checkout/route.js", "src/app/switcher/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]

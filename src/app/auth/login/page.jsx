@@ -24,8 +24,8 @@ export default function Login () {
   const handleLogin = async e => {
     e.preventDefault()
     const res = await signIn('customLogin', {
-      redirect: false,
       email: formValues.email,
+      redirect: true,
       password: formValues.password
     })
     

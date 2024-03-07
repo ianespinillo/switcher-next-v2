@@ -9,12 +9,12 @@ export default async function index ({ params: { ConfedName } }) {
   return (
     <>
       <header>
-        <div className='flex justify-center items-center gap-8 p-2'>
+        <div className='flex justify-center items-center flex-col gap-4 sm:flex-row sm:gap-8 p-2'>
           <img src={confed.img_url} alt='Confederation logo' className='max-w-[300px]' />
-          <h1 className='text-6xl text-qatar-gold qatar mt-2'>{ConfedName}</h1>
+          <h1 className='text-6xl text-qatar-gold qatar'>{ConfedName}</h1>
         </div>
       </header>
-      <div className='grilla'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-6 pt-28'>
         {countries.map((country, i) => (
           <Link
             className='confederacion'
@@ -27,7 +27,7 @@ export default async function index ({ params: { ConfedName } }) {
           >
             <img
               src={country.country_img_url}
-              className='ImgConfederacion'
+              className='max-w-[200px] lg:max-w-[300px]'
               alt='ConfederationImage'
             />
           </Link>

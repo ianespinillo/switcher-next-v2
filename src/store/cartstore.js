@@ -19,7 +19,6 @@ export const cartStore = create(
       },
       deleteItem: prod => {
         const { cart, cartSize, total } = get()
-        
         const newCart = cart.filter(item => item.id !== prod.id)
         set({
           cart: newCart,

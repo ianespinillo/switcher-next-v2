@@ -16,7 +16,7 @@
     width: 50%;
 }
 
-.navbar-ul li, .navbar-ul button {
+.navbar-ul li, .navbar-ul>button {
     cursor: pointer;
     font-family: Qatar22;
     font-size: 18px;
@@ -39,32 +39,20 @@
     padding: 10px;
 }
 
-.Conmebol nav{
+.CONMEBOL nav{
     color: #c99e53;
 }
 
-.Conmebol nav button{
-    background-color: #c99e53;
-    border-radius: 8px;
-    color: #003874;
-    outline: 2px solid #c99e53;
-}
-.Conmebol nav ul li::after{
+.CONMEBOL nav ul li::after{
     border-bottom: 2px solid #c99e53;
 }
 
-.Conmebol nav button:hover{
-    background-color: transparent;
-    color: #c99e53;
-    transition: all .35s ease;
-}
-
-.Conmebol .submenu {
+.CONMEBOL .submenu {
     background-color: transparent;
     background-image: none;
 }
 
-.Conmebol .submenu ul {
+.CONMEBOL .submenu {
     color: #003874;
     background-color: #c99e53;
     padding: 8px;
@@ -77,7 +65,7 @@
     color: #fff;
 }
 
-.AFC .submenu ul {
+.AFC .submenu{
     color: #00328d;
     background-color: #fff;
     padding: 8px;
@@ -86,21 +74,11 @@
     width: 120px;
 }
 
-.AFC nav button{
-    background-color: #fff;
-    border-radius: 8px;
-    color: #00328d;
-    outline: 2px solid #fff;
-}
 .AFC nav ul li::after{
     border-bottom: 2px solid #fff;
 }
 
-.AFC nav button:hover{
-    background-color: transparent;
-    color: #fff;
-    transition: all .35s ease;
-}
+
 
 .AFC .submenu{
     background-color: transparent;
@@ -110,28 +88,18 @@
     color: #f3ca0c;
 }
 
-.CAF nav button{
-    background-color: #f3ca0c;
-    border-radius: 8px;
-    color: #018839;
-    outline: 2px solid #f3ca0c;
-}
 .CAF nav ul li::after{
     border-bottom: 2px solid #f3ca0c;
 }
 
-.CAF nav button:hover{
-    background-color: transparent;
-    color: #f3ca0c;
-    transition: all .35s ease;
-}
+
 
 .CAF .submenu {
     background-color: transparent;
     background-image: none;
 }
 
-.CAF .submenu ul {
+.CAF .submenu {
     color: #018839;
     background-color: #f3ca0c;
     padding: 8px;
@@ -140,32 +108,22 @@
 }
 
 
-.Concacaf nav{
+.CONCACAF nav{
     color: #c99e53;
 }
 
-.Concacaf nav button{
-    background-color: #c99e53;
-    border-radius: 8px;
-    color: #000;
-    outline: 2px solid #c99e53;
-}
-.Concacaf nav ul li::after{
+.CONCACAF nav ul li::after{
     border-bottom: 2px solid #c99e53;
 }
 
-.Concacaf nav button:hover{
-    background-color: transparent;
-    color: #c99e53;
-    transition: all .35s ease;
-}
 
-.Concacaf .submenu {
+
+.CONCACAF .submenu {
     background-color: transparent;
     background-image: none;
 }
 
-.Concacaf .submenu ul {
+.CONCACAF .submenu {
     color: #000;
     background-color: #c99e53;
     padding: 8px;
@@ -178,28 +136,18 @@
     color: #fff;
 }
 
-.OFC nav button{
-    background-color: #fff;
-    border-radius: 8px;
-    color: #0067e5;
-    outline: 2px solid #fff;
-}
+
 .OFC nav ul li::after{
     border-bottom: 2px solid #fff;
 }
 
-.OFC nav button:hover{
-    background-color: transparent;
-    color: #fff;
-    transition: all .35s ease;
-}
 
 .OFC .submenu {
     background-color: transparent;
     background-image: none;
 }
 
-.OFC .submenu ul {
+.OFC .submenu {
     color: #0067e5;
     background-color: #fff;
     padding: 8px;
@@ -212,28 +160,18 @@
     color: #fff;
 }
 
-.UEFA nav button{
-    background-color: #fff;
-    border-radius: 8px;
-    color: #0a30ba;
-    outline: 2px solid #fff;
-}
+
 .UEFA nav ul li::after{
     border-bottom: 2px solid #fff;
 }
 
-.UEFA nav button:hover{
-    background-color: transparent;
-    color: #fff;
-    transition: all .35s ease;
-}
 
 .UEFA .submenu {
     background-color: transparent;
     background-image: none;
 }
 
-.UEFA .submenu ul {
+.UEFA .submenu {
     color: #0a30ba;
     background-color: #fff;
     padding: 8px;
@@ -246,20 +184,9 @@
     color: #fff;
 }
 
-.FIFA nav button{
-    background-color: #fff;
-    border-radius: 8px;
-    color: #003870;
-    outline: 2px solid #fff;
-}
+
 .FIFA nav ul li::after{
     border-bottom: 2px solid #fff;
-}
-
-.FIFA nav button:hover{
-    background-color: transparent;
-    color: #fff;
-    transition: all .35s ease;
 }
 
 .FIFA .submenu {
@@ -267,7 +194,7 @@
     background-image: none;
 }
 
-.FIFA .submenu ul {
+.FIFA .submenu {
     color: #003870;
     background-color: #fff;
     padding: 8px;
@@ -280,20 +207,20 @@
     color: #c99e53;
 }
 
-.main-screen nav button{
+/* .main-screen nav button{
     background-color: #c99e53;
     border-radius: 8px;
     color: #680a4d;
     outline: 2px solid #c99e53;
-}
-.main-screen nav ul li::after{
-    border-bottom: 2px solid #c99e53;
 }
 
 .main-screen nav button:hover{
     background-color: transparent;
     color: #c99e53;
     transition: all .35s ease;
+} */
+.main-screen nav ul li::after{
+    border-bottom: 2px solid #c99e53;
 }
 
 .icon-container {

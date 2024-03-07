@@ -25,7 +25,7 @@ body {
 }
 
 * {
-  border: 0;
+
   margin: 0;
   padding: 0;
 }
@@ -98,12 +98,12 @@ a {
   color: #c99e53;
 }
 
-.main-screen nav button {
+/* .main-screen nav button {
   background-color: #c99e53;
   border-radius: 8px;
   color: #680a4d;
   outline: 2px solid #c99e53;
-}
+} */
 .main-screen nav ul li::after {
   border-bottom: 2px solid #c99e53;
 }

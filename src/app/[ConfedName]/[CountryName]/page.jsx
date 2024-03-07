@@ -1,36 +1,39 @@
 import React from 'react'
 import Link from 'next/link'
-
-import styles from '@/Styles/Country.module.css'
 import { filterByCountry } from '@/lib/productActions'
+import { ProductCard } from '@/components/cards/ProductCard'
 
 export default async function Page ({ params: { ConfedName, CountryName } }) {
   const { countryId, childrens } = await filterByCountry(CountryName)
   return (
     <>
       <header>
-        <div className='header-texts'>
+        <div className='flex justify-center items-center flex-col gap-2 sm:flex-row'>
           {
             <>
               <img src={countryId.country_not_name_img} />
-              <p className='countryName'>{countryId.name}</p>
+              <p className='text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-700 qatar'>
+                {countryId.name}
+              </p>
             </>
           }
         </div>
       </header>
 
-      <div className={styles.competitions}>
-        <div className='grilla'>
+      <div className='bg-white sm:p-[30px] w-full'>
+        <div className='flex flex-wrap sm:grid md:grid md:grid-cols-2 lg:grid-cols-3'>
           {childrens.map((competition, i) => (
             <Link
-              className={styles.competencia}
+              
               key={i}
               href={CountryName + '/' + competition.name}
             >
-              <img src={competition.preview_url} alt='competition preview' />
-              <p className={styles.description}>{competition.name}</p>
-              <span>Price: ${parseFloat(competition.price)}</span>
-              <button className={styles.btnSee}>See More</button>
+              <ProductCard
+                name={competition.name}
+                preview={competition.preview_url}
+                price={competition.price}
+                description={competition.description}
+              />
             </Link>
           ))}
         </div>
@@ -43,7 +46,7 @@ export async function generateMetadata ({ params: { CountryName } }) {
   const { countryId } = await filterByCountry(CountryName)
   return {
     title: countryId.name,
-    icons:{
+    icons: {
       icon: countryId.country_not_name_img
     }
   }

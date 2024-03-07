@@ -120,14 +120,15 @@ export const authOptions = {
         ...session,
         user: {
           ...session.user,
-          username: token.username,
-          role: token.role
+          role: token.role,
+          subLevel: token.subLevel
         }
       }
     },
     jwt: async ({ user, token, account }) => {
       if (user) {
         token.role = user.role
+        token.subLevel = user.subscribeLevel
       }
       return token
     }

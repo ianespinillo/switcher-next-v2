@@ -18,8 +18,7 @@ export default function Register () {
   const { nickname, surname, email, password } = formValues
   const handleRegister = async e => {
     e.preventDefault()
-    signIn("register", {email: email, nickname: nickname, password: password})
-    .then(() => Router.push('/'))
+    signIn('register', { email: email, nickname: nickname, password: password })
   }
   return (
     <form className={Styles.form_login} onSubmit={handleRegister}>
