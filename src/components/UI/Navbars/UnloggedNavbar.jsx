@@ -11,12 +11,11 @@ export const UnloggedNavbar = () => {
   const [isToggle, setIsToggle] = useState(false)
   const path = usePathname().split('/')
   const confed = path[1]
-  console.log(path.length)
   const handleClick = () => {
     setIsToggle(!isToggle)
   }
   return (
-    <>
+    <nav id='navBar' className='h-[62px]'>
       <div
         className={`z-50 w-full h-full min-h-screen  fixed backdrop-blur-lg transition-transform ease-in duration-300 ${
           isToggle ? 'translate-x-0' : '-translate-x-full'
@@ -180,6 +179,6 @@ export const UnloggedNavbar = () => {
           </Link>
         </ul>
       </nav>
-    </>
+    </nav>
   )
 }

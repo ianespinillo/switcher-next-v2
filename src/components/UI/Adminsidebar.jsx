@@ -15,7 +15,7 @@ import { FaFlag, FaTrophy } from 'react-icons/fa'
 export function Adminsidebar () {
   return (
     <aside className={styles.container}>
-      <Link className={styles.link} href='/admin/confederation'>
+      <Link className={styles.link} href='/admin/confederations'>
         <BiWorld className={styles.icon} />
         <span className={styles.text}>Confederation</span>
       </Link>

@@ -58,13 +58,7 @@ export const EditModal = ({
   const { edgestore } = useEdgeStore()
   const [options, setOptions] = useState([])
 
-  useEffect(() => {
-    if (values != undefined) {
-      setValues(values)
-      console.log(values)
-    }
-  }, [values])
-
+  
   const [formValues, handleInputChange, handleSelectChange, reset, setValues] =
     useForm({
       countryId: '',
@@ -76,6 +70,12 @@ export const EditModal = ({
       compType: '',
       desc: ''
     })
+    useEffect(() => {
+      if (values != undefined) {
+        setValues(values)
+        console.log(values)
+      }
+    }, [values])
 
   const {
     competitionName,

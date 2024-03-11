@@ -3,6 +3,7 @@
 import { PrismaClient } from '@prisma/client'
 //import prisma from './db'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/dist/server/api-utils'
 //import prisma from './db'
 import { z } from 'zod'
 const prisma = new PrismaClient()
@@ -160,12 +161,16 @@ export async function obtainConfederations () {
       confed_3: 'asc'
     }
   })
+  console.log(confedList)
   return confedList
 }
 
 export async function obtainCountries () {
-  const countriesList = await prisma.country.findMany()
-  countriesList.sort((a, b) => (a.name > b.name ? 1 : -1))
+  const countriesList = await prisma.country.findMany({
+    orderBy: {
+      name: 'asc'
+    }
+  })
   return countriesList
 }
 
@@ -179,9 +184,12 @@ export async function filterByConfed (confed) {
     const countries = await prisma.country.findMany({
       where: {
         confederation_id: confederation.id
+      },
+      orderBy: {
+        name: 'asc'
       }
     })
-    countries.sort((a, b) => (a.name > b.name ? 1 : -1))
+
     return countries
   }
 }
@@ -350,43 +358,112 @@ export async function getPayments () {
   //recuperar todos los pagos y retornar un array con objetos tipo [{user_email, amount, state, products_name}]
   //del pago extaer el amount, email, y estado
   const pagos = await prisma.payement.findMany({
-    select:{
+    select: {
       user_email: true,
       amount: true,
       state: true,
-      id: true,
+      id: true
     }
   })
-  const paymetsIds = pagos.map(pago=>pago.id)
+  const paymetsIds = pagos.map(pago => pago.id)
   const paymetsDetails = await prisma.payement_detail.findMany({
-    where:{
-      payementId:{
+    where: {
+      payementId: {
         in: paymetsIds
       }
     }
   })
-  const productsIds = paymetsDetails.map(detail=>detail.productId)
+  const productsIds = paymetsDetails.map(detail => detail.productId)
   const products = await prisma.product.findMany({
-    where:{
-      id:{
+    where: {
+      id: {
         in: productsIds
       }
     }
   })
   // Crear un array con objetos tipo [{user_email, amount, state, products_name}]
   const payments = pagos.map(pago => {
-    const details = paymetsDetails.filter(detail => detail.payementId === pago.id);
+    const details = paymetsDetails.filter(
+      detail => detail.payementId === pago.id
+    )
     const productsNames = details.map(detail => {
-      const product = products.find(prod => prod.id === detail.productId);
-      return product.name;
-    });
+      const product = products.find(prod => prod.id === detail.productId)
+      return product.name
+    })
     return {
       user_email: pago.user_email,
       amount: pago.amount,
       state: pago.state,
       products: productsNames
-    };
-  });
-  
+    }
+  })
+
   return payments
+}
+
+export const getConfedById = async id => {
+  return await prisma.confederation.findFirst({
+    where: {
+      id: Number(id)
+    }
+  })
+}
+
+export const deleteById = async (id, type) => {
+  switch (type) {
+    case 'confederation':
+      await prisma.confederation.delete({
+        where: {
+          id: Number(id)
+        }
+      })
+      revalidatePath('/admin/confederations')
+      break
+    case 'country':
+      await prisma.country.delete({
+        where: {
+          id: Number(id)
+        }
+      })
+      revalidatePath('/admin/countries')
+      break
+    case 'competition':
+      await prisma.product.delete({
+        where: {
+          id: Number(id)
+        }
+      })
+      revalidatePath('/admin/competitions')
+      break
+    default:
+      break
+  }
+}
+
+
+export const updateConfederation = async (prevState, formData, confedId, url) => {
+  console.log(formData)
+  const schema = z.object({
+    ConfedName: z.string().nonempty(),
+    ConfedAbrev: z.string().nonempty(),
+    Url: z.string().nonempty().url(),
+  })
+  const result = schema.safeParse({
+    ConfedName: formData.get('ConfedName'),
+    ConfedAbrev: formData.get('ConfedAbrev'),
+    Url: url,
+  })
+  if (result.error) return { message: 'All fields are required' }
+  await prisma.confederation.update({
+    where: {
+      id: confedId,
+    },
+    data: {
+      name: result.data.ConfedName,
+      confed_3: result.data.ConfedAbrev,
+      img_url: result.data.Url
+    }
+  })
+  redirect('/admin/confederations')
+  return { message: null }
 }
