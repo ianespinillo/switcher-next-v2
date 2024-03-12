@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { deleteById } from '@/lib/productActions'
 
 export function AdmnTable ({ TABLE_HEAD, TABLE_ROWS, TABLE_LINKS, DELETE_ID }) {
+  console.log(TABLE_LINKS)
   return (
     <ThemeProvider>
       <Card className='h-full w-full rounded-b-md'>
@@ -49,11 +50,10 @@ export function AdmnTable ({ TABLE_HEAD, TABLE_ROWS, TABLE_LINKS, DELETE_ID }) {
                       value.includes('https://')
                     ) {
                       return (
-                        <td
-                          className={classes + ' flex justify-center'}
-                          key={index}
-                        >
-                          <img src={value} alt='Logo' className='h-10 w-10' />
+                        <td className={classes} key={index}>
+                          <div className='flex justify-center items-center'>
+                            <img src={value} alt='Logo' className='h-10 w-10' />
+                          </div>
                         </td>
                       )
                     }
@@ -68,21 +68,38 @@ export function AdmnTable ({ TABLE_HEAD, TABLE_ROWS, TABLE_LINKS, DELETE_ID }) {
                       </td>
                     )
                   })}
-                  <td className={classes + ' flex justify-center items-center gap-4'}>
-                    {TABLE_LINKS.map(link => (
-                      <Link
-                        href={link}
-                        key={link}
-                        className='align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs rounded-lg shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none p-4 text-qatar-purple bg-qatar-gold'
-                      >
-                        Edit
-                      </Link>
-                    ))}
-                    {
-                      DELETE_ID.map(id=>
-                      <Button className={classes + ' bg-qatar-gold text-qatar-purple'} onClick={deleteById(id)}>Delete</Button>
-                      )
-                    }
+                  <td className={classes + ' gap-4'}>
+                    <div className='flex justify-center items-center gap-4'>
+                      {TABLE_LINKS.map(link => {
+                        
+                        if (link.split('/')[4]=== prop.id) {
+                          return (
+                            <Link
+                              href={link}
+                              key={link}
+                              className='align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs rounded-lg shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none p-4 text-qatar-purple bg-qatar-gold'
+                            >
+                              Edit
+                            </Link>
+                          )
+                        }
+                      })}
+                      {DELETE_ID.map(({ id, type }) => {
+                        if (id === prop.id) {
+                          return (
+                            <Button
+                              key={id}
+                              className={
+                                classes + ' bg-qatar-gold text-qatar-purple'
+                              }
+                              onClick={() => deleteById(id, type)}
+                            >
+                              Delete
+                            </Button>
+                          )
+                        }
+                      })}
+                    </div>
                   </td>
                 </tr>
               )

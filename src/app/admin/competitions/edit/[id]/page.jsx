@@ -7,7 +7,11 @@ import modalStyle from '@/Styles/modal.module.css'
 
 import { useForm } from '@/hooks/useForm'
 
-import { createCompetition, obtainCountries } from '@/lib/productActions'
+import {
+  updateProduct,
+  obtainCountries,
+  getCompetitionById
+} from '../../../../../lib/productActions'
 import { useFormState } from 'react-dom'
 import { useEdgeStore } from '@/lib/utils/edgestore'
 const initFormValues = {
@@ -70,7 +74,7 @@ const selectStyles = {
     backgroundColor: '#680a4d'
   })
 }
-export default function Add_competition () {
+export default function Edit_competition ({ params: { id } }) {
   useEffect(() => {
     async function fetchData () {
       const data = await obtainCountries()
@@ -93,12 +97,17 @@ export default function Add_competition () {
     preview: null
   })
   const { big, fifaproject, logo, preview } = Files
-  const [, formAction] = useFormState(serverAc, initialState)
+  const [state, formAction] = useFormState(serverAc, initialState)
   const [options, setOptions] = useState([])
   const [actualOption, setActualOption] = useState({})
   const { edgestore } = useEdgeStore()
-  const [formValues, handleInputChange, , , setFormValues] =
-    useForm(initFormValues)
+  const [
+    formValues,
+    handleInputChange,
+    handleSelectChange,
+    reset,
+    setFormValues
+  ] = useForm(initFormValues)
   const {
     competitionName,
     competitionAbrev,
@@ -112,16 +121,68 @@ export default function Add_competition () {
   } = formValues
 
   async function serverAc (prevState, formData) {
-    await createCompetition(
+    await updateProduct(
       prevState,
       formData,
       previewUrl,
       logoUrl,
       bigFile,
-      fifaprojectFile
+      fifaprojectFile,
+      id
     )
   }
 
+  useEffect(() => {
+    const loadCompetition = async () => {
+      const values = await getCompetitionById(id)
+      setFormValues({
+        ...formValues,
+        countryId: values.countryId,
+        competitionName: values.name,
+        competitionAbrev: values.name_3,
+        logoUrl: values.logo_url,
+        previewUrl: values.preview_url,
+        bigFile: values.big_url,
+        fifaprojectFile: values.fifaproject_url,
+        price: parseInt(values.price),
+        compType: values.type,
+        desc: values.description
+      })
+      const country = options.find(option => option.value === values.countryId)
+      setActualOption(country)
+    }
+    loadCompetition()
+  }, [options])
+  useEffect(() => {
+    if (previewUrl && Files.preview) {
+      edgestore.publicFiles
+        .delete({
+          url: previewUrl
+        })
+        .then(() => setFormValues(prev => ({ ...prev, previewUrl: '' })))
+    }
+    if (logoUrl && Files.logo) {
+      edgestore.publicFiles
+        .delete({
+          url: logoUrl
+        })
+        .then(() => setFormValues(prev => ({ ...prev, logoUrl: '' })))
+    }
+    if (bigFile && Files.big) {
+      edgestore.publicFiles
+        .delete({
+          url: bigFile
+        })
+        .catch(() => setFormValues(prev => ({ ...prev, bigFile: '' })))
+    }
+    if (fifaprojectFile && Files.fifaproject) {
+      edgestore.publicFiles
+        .delete({
+          url: fifaprojectFile
+        })
+        .then(() => setFormValues(prev => ({ ...prev, fifaprojectFile: '' })))
+    }
+  }, [previewUrl, logoUrl, bigFile, fifaprojectFile, Files])
   useEffect(() => {
     big &&
       edgestore.publicFiles
@@ -158,11 +219,11 @@ export default function Add_competition () {
   return (
     <div className='absolute left-[20%] w-4/5 flex justify-center items-center h-[calc(100vh-62px)]'>
       <form
-        className='flex flex-col gap-3 items-center justify-center text-qatar-purple bg-qatar-gold rounded-lg shadow-md shadow-black p-10'
+        className='flex flex-col gap-3 items-center justify-center scale-110 text-qatar-purple bg-qatar-gold rounded-lg shadow-md shadow-black p-10'
         action={formAction}
       >
         <h3 className='qatar text-3xl text-qatar-purple'>
-          Add a new competition
+          Edit competition id: {id}
         </h3>
         <div className={modalStyle.messages}></div>
         <div className='flex gap-4'>
@@ -297,7 +358,7 @@ export default function Add_competition () {
           type='submit'
           className='flex items-center align-middle bg-qatar-purple rounded-xl px-4 py-2 w-full text-qatar-gold justify-center gap-2'
         >
-          Add <IoIosAddCircle />
+          Update <IoIosAddCircle />
         </button>
       </form>
     </div>

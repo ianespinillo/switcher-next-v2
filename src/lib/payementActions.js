@@ -1,7 +1,6 @@
 'use server'
 
 import prisma from './db'
-import paypal from '@paypal/checkout-server-sdk'
 
 export async function paypalPayement (status, date, user_email, amount) {
   const payment = await prisma.payement.create({
@@ -21,7 +20,7 @@ export async function createPayementDetail (payement_id, items) {
     await prisma.payement_detail.create({
       data: {
         quantity: 1,
-        productId: Number(reference_id),
+        productId: reference_id,
         payementId: Number(payement_id)
       }
     })

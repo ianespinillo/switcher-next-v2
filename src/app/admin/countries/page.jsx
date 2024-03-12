@@ -17,7 +17,8 @@ export default async function countries_panel () {
             name: country.name,
             logo: country.country_not_name_img
           }))}
-          BUTTONS={['Edit', 'Delete']}
+          TABLE_LINKS={countries.map(({ id }) => `/admin/countries/edit/${id}`)}
+          DELETE_ID={countries.map(({ id }) => ({id, type: 'country'}))}
         />
       </div>
     </div>

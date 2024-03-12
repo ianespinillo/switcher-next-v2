@@ -7,7 +7,10 @@ import { IoIosAddCircle, IoIosCloseCircle } from 'react-icons/io'
 import modalStyle from '@/Styles/modal.module.css'
 import { IconContext } from 'react-icons'
 import { useForm } from '@/hooks/useForm'
-import { getConfedById, updateConfederation } from '../../../../../lib/productActions'
+import {
+  getConfedById,
+  updateConfederation
+} from '../../../../../lib/productActions'
 import { useFormState } from 'react-dom'
 import { useEdgeStore } from '@/lib/utils/edgestore'
 import { useRouter } from 'next/navigation'
@@ -17,7 +20,7 @@ const initFormValues = {
   ConfedAbrev: '',
   Url: ''
 }
-export default function edit_confederation ({ params: { id } }) {
+export default function Edit_confederation ({ params: { id } }) {
   const router = useRouter()
   const customStyles = {
     content: {
@@ -32,8 +35,8 @@ export default function edit_confederation ({ params: { id } }) {
   const initialState = {
     message: null
   }
-}
-const [formValues, handleInputChange, , reset, setFormValues] =
+
+  const [formValues, handleInputChange, , reset, setFormValues] =
     useForm(initFormValues)
   const { edgestore } = useEdgeStore()
   const [logo, setLogo] = useState(null)
@@ -42,9 +45,18 @@ const [formValues, handleInputChange, , reset, setFormValues] =
   const { Url, ConfedAbrev, ConfedName } = formValues
   async function serverAc (prevState, formData) {
     console.log(prevState)
-    const res = await updateConfederation(prevState, formData, id, logo)
+    const res = await updateConfederation(prevState, formData, id, formValues.Url)
     res.message == null && router.back()
-  console.log(formValues)
+  }
+  useEffect(() => {
+    if(Url && logo){
+      edgestore.publicFiles.delete({
+        url: Url
+      })
+      .then(() =>setFormValues(prev=>({...prev, Url: ''})))
+    }
+  }, [Url, logo])
+  
   useEffect(() => {
     if (logo) {
       edgestore.publicFiles

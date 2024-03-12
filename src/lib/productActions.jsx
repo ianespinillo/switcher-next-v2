@@ -3,7 +3,7 @@
 import { PrismaClient } from '@prisma/client'
 //import prisma from './db'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/dist/server/api-utils'
+import { redirect } from 'next/navigation'
 //import prisma from './db'
 import { z } from 'zod'
 const prisma = new PrismaClient()
@@ -39,9 +39,7 @@ export async function createConfederation (prevState, formValues, img_url) {
     }
   })
 
-  return {
-    message: null
-  }
+  redirect('/admin/confederations')
 }
 
 export async function createCountry (prevState, formData, img_url, no_name_img) {
@@ -77,7 +75,7 @@ export async function createCountry (prevState, formData, img_url, no_name_img) 
       country_not_name_img: no_name_img
     }
   })
-  return { message: null }
+  redirect('/admin/countries')
 }
 
 export async function createCompetition (
@@ -88,7 +86,6 @@ export async function createCompetition (
   big,
   fifaproject
 ) {
-  console.log(formData)
   const schema = z.object({
     countryId: z.string().nonempty(),
     competitionName: z.string().nonempty(),
@@ -134,8 +131,7 @@ export async function createCompetition (
       fifaproject_url: fifaproject
     }
   })
-  revalidatePath('admin/products')
-  return { message: null }
+  redirect('/admin/competitions')
 }
 
 export async function obtainProducts () {
@@ -161,7 +157,6 @@ export async function obtainConfederations () {
       confed_3: 'asc'
     }
   })
-  console.log(confedList)
   return confedList
 }
 
@@ -331,11 +326,16 @@ export async function updateProduct (
     desc
   } = result.data
   const competition = await prisma.product.findFirst({
-    where: {}
+    where: {
+      id: id
+    }
   })
+  if (!competition) {
+    return { message: 'Competition not found' }
+  }
   await prisma.product.update({
     where: {
-      id
+      id: id
     },
     data: {
       description: desc,
@@ -350,8 +350,7 @@ export async function updateProduct (
       fifaproject_url: fifaproject
     }
   })
-  revalidatePath('admin/products')
-  return { message: null }
+  redirect('/admin/competitions')
 }
 
 export async function getPayments () {
@@ -404,7 +403,7 @@ export async function getPayments () {
 export const getConfedById = async id => {
   return await prisma.confederation.findFirst({
     where: {
-      id: Number(id)
+      id: id
     }
   })
 }
@@ -412,25 +411,61 @@ export const getConfedById = async id => {
 export const deleteById = async (id, type) => {
   switch (type) {
     case 'confederation':
-      await prisma.confederation.delete({
-        where: {
-          id: Number(id)
+      try {
+        const countries = await prisma.country.findMany({
+          where: {
+            confederation_id: id
+          }
+        })
+        for (const country of countries) {
+          await prisma.product.deleteMany({
+            where: {
+              countryId: country.id
+            }
+          })
         }
-      })
+        await prisma.country.deleteMany({
+          where: {
+            confederation_id: id
+          }
+        })
+
+        await prisma.confederation.delete({
+          where: {
+            id: id
+          }
+        })
+
+        console.log(
+          `Confederation with id ${id} and related data have been deleted.`
+        )
+      } catch (error) {
+        console.error('Error deleting confederation and related data:', error)
+      }
       revalidatePath('/admin/confederations')
       break
     case 'country':
-      await prisma.country.delete({
-        where: {
-          id: Number(id)
-        }
-      })
+      try {
+        await prisma.product.deleteMany({
+          where:{
+            countryId: id
+          }
+        })
+        await prisma.country.delete({
+          where: {
+            id: id
+          }
+        })
+        console.log('Successfully deleted')
+      } catch (error) {
+        console.error('Error deleting country', error)
+      }
       revalidatePath('/admin/countries')
       break
     case 'competition':
       await prisma.product.delete({
         where: {
-          id: Number(id)
+          id: id
         }
       })
       revalidatePath('/admin/competitions')
@@ -440,30 +475,77 @@ export const deleteById = async (id, type) => {
   }
 }
 
-
-export const updateConfederation = async (prevState, formData, confedId, url) => {
-  console.log(formData)
+export const updateConfederation = async (
+  prevState,
+  formData,
+  confedId,
+  url
+) => {
   const schema = z.object({
     ConfedName: z.string().nonempty(),
     ConfedAbrev: z.string().nonempty(),
-    Url: z.string().nonempty().url(),
+    Url: z.string().nonempty().url()
   })
   const result = schema.safeParse({
     ConfedName: formData.get('ConfedName'),
     ConfedAbrev: formData.get('ConfedAbrev'),
-    Url: url,
+    Url: url
   })
   if (result.error) return { message: 'All fields are required' }
   await prisma.confederation.update({
     where: {
-      id: confedId,
+      id: Number(confedId)
     },
     data: {
-      name: result.data.ConfedName,
+      confed_name: result.data.ConfedName,
       confed_3: result.data.ConfedAbrev,
       img_url: result.data.Url
     }
   })
   redirect('/admin/confederations')
-  return { message: null }
 }
+
+export const updateCountry = async (
+  prevState,
+  formData,
+  countryId,
+  notNameUrl,
+  imgUrl
+) => {
+  const schema = z.object({
+    confedId: z.string().nonempty(),
+    countryName: z.string().nonempty(),
+    countryAbrev: z.string().nonempty()
+  })
+  const success = schema.safeParse({
+    confedId: formData.get('confedId'),
+    countryName: formData.get('countryName'),
+    countryAbrev: formData.get('countryAbrev')
+  })
+  if (success.error) {
+    return {
+      message: 'All fields are required'
+    }
+  }
+  const { confedId, countryName, countryAbrev } = success.data
+
+  await prisma.country.update({
+    where: {
+      id: Number(countryId)
+    },
+    data: {
+      name: countryName,
+      country_3: countryAbrev,
+      country_img_url: imgUrl,
+      confederation_id: parseInt(confedId),
+      country_not_name_img: notNameUrl
+    }
+  })
+  redirect('/admin/countries')
+}
+
+export const getCountryById = async id =>
+  await prisma.country.findFirst({ where: { id: id } })
+
+export const getCompetitionById = async id =>
+  await prisma.product.findFirst({ where: { id: id } })
