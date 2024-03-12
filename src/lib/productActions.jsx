@@ -71,8 +71,9 @@ export async function createCountry (prevState, formData, img_url, no_name_img) 
       name: countryName,
       country_3: countryAbrev,
       country_img_url: img_url,
-      confederation_id: parseInt(confedId),
-      country_not_name_img: no_name_img
+      confederation_id: confedId,
+      country_not_name_img: no_name_img,
+      
     }
   })
   redirect('/admin/countries')
@@ -411,37 +412,11 @@ export const getConfedById = async id => {
 export const deleteById = async (id, type) => {
   switch (type) {
     case 'confederation':
-      try {
-        const countries = await prisma.country.findMany({
-          where: {
-            confederation_id: id
-          }
-        })
-        for (const country of countries) {
-          await prisma.product.deleteMany({
-            where: {
-              countryId: country.id
-            }
-          })
+      await prisma.confederation.delete({
+        where:{
+          id
         }
-        await prisma.country.deleteMany({
-          where: {
-            confederation_id: id
-          }
-        })
-
-        await prisma.confederation.delete({
-          where: {
-            id: id
-          }
-        })
-
-        console.log(
-          `Confederation with id ${id} and related data have been deleted.`
-        )
-      } catch (error) {
-        console.error('Error deleting confederation and related data:', error)
-      }
+      })
       revalidatePath('/admin/confederations')
       break
     case 'country':

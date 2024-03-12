@@ -64,7 +64,7 @@ const selectStyles ={
 const initFormValues = {
   countryName: '',
   countryAbrev: '',
-  confedName: '',
+  confedId: '',
   imgUrl: '',
   imgWithoutName: ''
 }
@@ -86,6 +86,7 @@ export default function Add_country () {
     reset,
     setFormValues
   ] = useForm(initFormValues)
+  console.log(formValues)
   const { countryName, countryAbrev, confedName } = formValues
 
   useLayoutEffect(() => {
@@ -124,20 +125,13 @@ export default function Add_country () {
     }
   }, [images.no_name])
 
-  function closeModal () {
-    reset()
-    setOptions([])
-    setActualOPtion(null)
-    router.back()
-    // Close the modal
-  }
   async function serverAc (prevState, formData) {
     await createCountry(
       prevState,
       formData,
       formValues.imgUrl,
       formValues.imgWithoutName
-    ).then(({ message }) => !message && closeModal())
+    )
   }
   const initialState = { message: null }
   const [state, formAction] = useFormState(serverAc, initialState)

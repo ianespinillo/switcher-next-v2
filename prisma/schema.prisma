@@ -80,7 +80,7 @@ model Confederation {
   img_url     String
   confed_name String
   confed_3    String
-  Country     Country[]   
+  Country     Country[]
 }
 
 model Country {
@@ -108,8 +108,8 @@ model Product {
   country         Country           @relation(fields: [countryId], references: [id])
   countryId       String
   Payement_detail Payement_detail[]
-  Version         Version?          @relation(fields: [versionId], references: [id])
-  versionId       String?
+  Version         Version?          @relation(fields: [versionId], references: [id], onDelete: SetDefault)
+  versionId       String?           @default("")
 }
 
 model Payement {
