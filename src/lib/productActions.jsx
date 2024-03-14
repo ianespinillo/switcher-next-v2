@@ -1,12 +1,9 @@
 'use server'
 
-import { PrismaClient } from '@prisma/client'
-//import prisma from './db'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-//import prisma from './db'
+import prisma from './db'
 import { z } from 'zod'
-const prisma = new PrismaClient()
 
 export async function createConfederation (prevState, formValues, img_url) {
   const schema = z.object({
@@ -72,8 +69,7 @@ export async function createCountry (prevState, formData, img_url, no_name_img) 
       country_3: countryAbrev,
       country_img_url: img_url,
       confederation_id: confedId,
-      country_not_name_img: no_name_img,
-      
+      country_not_name_img: no_name_img
     }
   })
   redirect('/admin/countries')
@@ -93,7 +89,8 @@ export async function createCompetition (
     competitionAbrev: z.string().nonempty(),
     price: z.string().nonempty(),
     compType: z.string().nonempty(),
-    desc: z.string().nonempty()
+    desc: z.string().nonempty(),
+    version: z.string().nonempty(),
   })
   const result = schema.safeParse({
     countryId: formData.get('countryId'),
@@ -101,7 +98,8 @@ export async function createCompetition (
     competitionAbrev: formData.get('competitionAbrev'),
     price: formData.get('price'),
     compType: formData.get('compType'),
-    desc: formData.get('desc')
+    desc: formData.get('desc'),
+    version: formData.get('version'),
   })
   if (result.error) return { message: 'All fields are required' }
   const {
@@ -110,7 +108,8 @@ export async function createCompetition (
     competitionName,
     price,
     compType,
-    desc
+    desc,
+    version
   } = result.data
   const competitionExist = await prisma.product.findFirst({
     where: {
@@ -126,10 +125,11 @@ export async function createCompetition (
       logo_url: logo,
       preview_url: preview,
       type: compType,
-      countryId: Number(countryId),
+      countryId: countryId,
       name_3: competitionAbrev,
       big_url: big,
-      fifaproject_url: fifaproject
+      fifaproject_url: fifaproject,
+      versionId: version
     }
   })
   redirect('/admin/competitions')
@@ -345,7 +345,7 @@ export async function updateProduct (
       logo_url: logo,
       preview_url: preview,
       type: compType,
-      countryId: Number(countryId),
+      countryId: countryId,
       name_3: competitionAbrev,
       big_url: big,
       fifaproject_url: fifaproject
@@ -413,7 +413,7 @@ export const deleteById = async (id, type) => {
   switch (type) {
     case 'confederation':
       await prisma.confederation.delete({
-        where:{
+        where: {
           id
         }
       })
@@ -422,7 +422,7 @@ export const deleteById = async (id, type) => {
     case 'country':
       try {
         await prisma.product.deleteMany({
-          where:{
+          where: {
             countryId: id
           }
         })
@@ -444,6 +444,14 @@ export const deleteById = async (id, type) => {
         }
       })
       revalidatePath('/admin/competitions')
+      break
+    case 'version':
+      await prisma.version.delete({
+        where: {
+          id: id
+        }
+      })
+      revalidatePath('/admin/switcher')
       break
     default:
       break

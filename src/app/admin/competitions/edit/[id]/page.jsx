@@ -14,6 +14,7 @@ import {
 } from '../../../../../lib/productActions'
 import { useFormState } from 'react-dom'
 import { useEdgeStore } from '@/lib/utils/edgestore'
+import { getVersions } from '../../../../../lib/versionActions'
 const initFormValues = {
   countryId: '',
   competitionName: '',
@@ -84,6 +85,8 @@ export default function Edit_competition ({ params: { id } }) {
           { label: country.name, value: country.id }
         ])
       )
+      const version = await getVersions()
+      setVersions(version)
     }
     fetchData()
   }, [])
@@ -100,6 +103,7 @@ export default function Edit_competition ({ params: { id } }) {
   const [state, formAction] = useFormState(serverAc, initialState)
   const [options, setOptions] = useState([])
   const [actualOption, setActualOption] = useState({})
+  const [versions, setVersions] = useState([])
   const { edgestore } = useEdgeStore()
   const [
     formValues,
@@ -351,6 +355,24 @@ export default function Edit_competition ({ params: { id } }) {
                 onChange={handleInputChange}
                 className='p-2 bg-transparent outline outline-1.5 outline-qatar-purple rounded-sm placeholder:text-qatar-purple focus:outline'
               />
+            </label>
+            <label htmlFor='version' className='flex flex-col gap-1.5'>
+              {' '}
+              Select the version
+              <select
+                defaultValue=''
+                name='version'
+                id='version'
+                onChange={handleInputChange}
+                className='p-2 bg-transparent outline outline-1.5 outline-qatar-purple rounded-sm placeholder:text-qatar-purple focus:outline'
+              >
+                <option value=''>Select a version</option>
+                {versions.map(version => (
+                  <option key={version.id} value={version.id}>
+                    {version.version_number}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </div>

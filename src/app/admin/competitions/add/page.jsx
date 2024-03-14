@@ -2,14 +2,15 @@
 
 import React, { useEffect, useState } from 'react'
 import { IoIosAddCircle } from 'react-icons/io'
+import { useFormState } from 'react-dom'
 import Select from 'react-select'
 import modalStyle from '@/Styles/modal.module.css'
 
 import { useForm } from '@/hooks/useForm'
-
-import { createCompetition, obtainCountries } from '@/lib/productActions'
-import { useFormState } from 'react-dom'
 import { useEdgeStore } from '@/lib/utils/edgestore'
+import { createCompetition, obtainCountries } from '@/lib/productActions'
+import {getVersions} from '../../../../lib/versionActions';
+
 const initFormValues = {
   countryId: '',
   competitionName: '',
@@ -20,7 +21,8 @@ const initFormValues = {
   compType: '',
   desc: '',
   bigFile: '',
-  fifaprojectFile: ''
+  fifaprojectFile: '',
+  version: '',
 }
 const selectStyles = {
   control: (baseStyles, state) => ({
@@ -80,6 +82,9 @@ export default function Add_competition () {
           { label: country.name, value: country.id }
         ])
       )
+      const version = await getVersions()
+
+      setVersions(version)  
     }
     fetchData()
   }, [])
@@ -96,6 +101,7 @@ export default function Add_competition () {
   const [, formAction] = useFormState(serverAc, initialState)
   const [options, setOptions] = useState([])
   const [actualOption, setActualOption] = useState({})
+  const [versions, setVersions] = useState([])
   const { edgestore } = useEdgeStore()
   const [formValues, handleInputChange, , , setFormValues] =
     useForm(initFormValues)
@@ -108,7 +114,8 @@ export default function Add_competition () {
     fifaprojectFile,
     price,
     compType,
-    desc
+    desc,
+    version
   } = formValues
 
   async function serverAc (prevState, formData) {
@@ -290,6 +297,15 @@ export default function Add_competition () {
                 onChange={handleInputChange}
                 className='p-2 bg-transparent outline outline-1.5 outline-qatar-purple rounded-sm placeholder:text-qatar-purple focus:outline'
               />
+            </label>
+            <label htmlFor="version" className="flex flex-col gap-1.5">{' '}
+              Select the version
+              <select defaultValue='' name="version" id="version" onChange={handleInputChange} className='p-2 bg-transparent outline outline-1.5 outline-qatar-purple rounded-sm placeholder:text-qatar-purple focus:outline'>
+                <option value=''>Select a version</option>
+                {
+                  versions.map(version => <option key={version.id} value={version.id}>{version.version_number}</option>)
+                }
+              </select>
             </label>
           </div>
         </div>

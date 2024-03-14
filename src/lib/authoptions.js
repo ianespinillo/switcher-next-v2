@@ -93,13 +93,13 @@ export const authOptions = {
         const notUsedEmail = await prisma.user.findFirst({
           where: { email: credentials.email }
         })
-        const hashedPassword= hash(credentials.password, 10)
+        const hashedPassword=await hash(credentials.password, 10)
         if (!notUsedEmail) {
           const newUser = await prisma.user.create({
             data: {
               name: credentials.nickname,
               email: credentials.email,
-              password: credentials.password,
+              password: hashedPassword,
               role:
                 credentials.email === 'espinilloian@hotmail.com'
                   ? 'admin'
