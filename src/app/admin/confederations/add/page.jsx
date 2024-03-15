@@ -17,7 +17,7 @@ const initFormValues = {
   ConfedAbrev: '',
   Url: ''
 }
-export default function page () {
+export default function Page_ () {
   const router = useRouter()
   const customStyles = {
     content: {

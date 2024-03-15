@@ -4,7 +4,7 @@ import { getMyProducts } from '@/lib/productActions'
 import { getServerSession } from 'next-auth'
 import React from 'react'
 
-export default async function Page () {
+export default async function Page_ () {
   const { user } = await getServerSession(authOptions)
 
   const { prods } = await getMyProducts(user.email)

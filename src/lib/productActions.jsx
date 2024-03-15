@@ -307,7 +307,8 @@ export async function updateProduct (
     competitionAbrev: z.string().nonempty(),
     price: z.string().nonempty(),
     compType: z.string().nonempty(),
-    desc: z.string().nonempty()
+    desc: z.string().nonempty(),
+    version: z.string().nonempty(),
   })
   const result = schema.safeParse({
     countryId: formData.get('countryId'),
@@ -315,7 +316,8 @@ export async function updateProduct (
     competitionAbrev: formData.get('competitionAbrev'),
     price: formData.get('price'),
     compType: formData.get('compType'),
-    desc: formData.get('desc')
+    desc: formData.get('desc'),
+    version: formData.get('version')
   })
   if (result.error) return { message: 'All fields are required' }
   const {
@@ -324,7 +326,8 @@ export async function updateProduct (
     competitionName,
     price,
     compType,
-    desc
+    desc,
+    version
   } = result.data
   const competition = await prisma.product.findFirst({
     where: {
@@ -348,7 +351,8 @@ export async function updateProduct (
       countryId: countryId,
       name_3: competitionAbrev,
       big_url: big,
-      fifaproject_url: fifaproject
+      fifaproject_url: fifaproject,
+      versionId: version,
     }
   })
   redirect('/admin/competitions')

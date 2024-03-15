@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from 'next/server'
 import { headers } from 'next/headers'
 import { verifyToken } from '../../../../middlewares/JWT'
 import prisma from '@/lib/db'
-export async function POST (req, res) {
+export async function GET (req, res) {
   const token = headers().get('x-token')
   try {
     await verifyToken(token)
@@ -18,7 +18,6 @@ export async function POST (req, res) {
     })
     return NextResponse.json({ ok: true, countries }, { status: 200 })
   } catch (error) {
-    console.log(error)
     return NextResponse.json(
       {
         ok: false,

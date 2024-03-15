@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect } from 'react'
 
-export default function Page () {
+export default function Page_ () {
   const searchParams = useSearchParams()
   const paramsSplited = searchParams.toString().split('&')
   const router = useRouter()

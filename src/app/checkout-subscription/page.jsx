@@ -7,7 +7,7 @@ import { subs } from '@/Data/subscriptions'
 import { updateSubscription } from '@/lib/userActions'
 import { useSession } from 'next-auth/react'
 
-export default function page () {
+export default function Page_ () {
   const subQuery = useSearchParams().get('sub')
   const selectedSub = subs.find(sub => sub.level === Number(subQuery))
   const {data:session}=useSession()

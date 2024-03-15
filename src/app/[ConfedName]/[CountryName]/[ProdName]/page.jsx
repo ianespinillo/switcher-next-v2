@@ -9,7 +9,7 @@ import { FaTwitter } from "react-icons/fa6";
 import { BiLogoGmail } from "react-icons/bi";
 import { IoLogoDiscord } from 'react-icons/io5'
 
-export default async function Page ({ params: { ProdName } }) {
+export default async function Page_ ({ params: { ProdName } }) {
   const name = ProdName.split('%20').join(' ')
   const product = await filterProduct(name)
   const session = await getServerSession(authOptions)

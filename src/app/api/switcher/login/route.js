@@ -1,10 +1,10 @@
-import {NextResponse} from 'next/server'
+import { NextResponse } from 'next/server'
 
 import { compare } from 'bcryptjs'
 import prisma from '../../../../lib/db'
 import jwt from 'jsonwebtoken'
 
-export async function POST(req, res){
+export async function POST (req, res) {
   const body = await req.json()
   const userExists = await prisma.user.findFirst({
     where: {
@@ -17,23 +17,31 @@ export async function POST(req, res){
       msg: 'User not found'
     })
   }
-  const hashedPassword =await compare(body.password, userExists.password)
+  const hashedPassword = await compare(body.password, userExists.password)
   if (!hashedPassword) {
     return NextResponse.json({
       ok: false,
       msg: 'Wrong password'
     })
   }
-  const token = jwt.sign(
-    { email: userExists.email },
-    process.env.JWT_SECRET,
-    {expiresIn: '1d'}
-  )
-  return NextResponse.json({
-    ok: true,
-    user: {
-      email: userExists.email,
-      token
-    }
+  const token = jwt.sign({ email: userExists.email }, process.env.JWT_SECRET, {
+    expiresIn: '1d'
   })
+  return NextResponse.json(
+    {
+      ok: true,
+      user: {
+        email: userExists.email,
+        token
+      }
+    },
+    {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      }
+    }
+  )
 }

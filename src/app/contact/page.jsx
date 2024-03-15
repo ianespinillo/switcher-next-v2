@@ -1,6 +1,6 @@
 import React from 'react'
 import {ContactUs} from '@/components/Form/ContactUs';
-export default function Page () {
+export default function Page_ () {
   return (
     <div className='flex items-center justify-center'>
       <ContactUs />

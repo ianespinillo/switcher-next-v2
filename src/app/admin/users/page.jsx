@@ -4,7 +4,7 @@ import { UsersTable } from '@/components/UI/UsersTable';
 
 import React, { useEffect, useState } from 'react'
 
-export default function Page() {
+export default function Page_() {
   const [data, setData] = useState([])
   useEffect(() =>{
     fetch('/api/users')

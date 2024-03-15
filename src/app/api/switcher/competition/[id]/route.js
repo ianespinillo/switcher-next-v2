@@ -15,9 +15,9 @@ export async function POST (req, res) {
         id: true
       }
     })
-      const day = Date.now()
-      if (competition.versionId) {
-        const v = await prisma.version.findFirst({
+    const day = Date.now()
+    if (competition.versionId) {
+      const v = await prisma.version.findFirst({
           where: {
             id: competition.versionId
           },
@@ -25,8 +25,9 @@ export async function POST (req, res) {
             free_release: true
           }
         })
-        const diff = day - v.free_release
+        const diff = v.free_release - day
         const daysDiff = Math.floor(diff / (1000 * 60 * 60 * 24))
+        console.log(daysDiff)
         if (daysDiff > 0) {
           const subLevel = await prisma.user.findFirst({
             where: {
@@ -36,16 +37,15 @@ export async function POST (req, res) {
               subscribeLevel: true
             }
           })
-
           switch (subLevel.subscribeLevel) {
             case 0:
               if (daysDiff > 7) {
-                compet.free = false
+                competition.free = false
               }
               break
             case 1:
               if (daysDiff > 3) {
-                compet.free = false
+                competition.free = false
               }
               break
             default:

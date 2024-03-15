@@ -3,7 +3,7 @@ import { SubsCard } from '@/components/cards/card'
 import { subs } from '@/Data/subscriptions'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authoptions'
-export default async function page () {
+export default async function Switcher_subs () {
   const session = await getServerSession(authOptions)
   console.log(session)
   return (
