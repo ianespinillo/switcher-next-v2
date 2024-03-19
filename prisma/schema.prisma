@@ -12,20 +12,28 @@ datasource db {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  name           String
-  email          String?   @unique
-  emailVerified  DateTime? @map("email_verified")
-  image          String?
-  role           String
-  subscribeLevel Int?      @default(0)
-  password       String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  accounts       Account[]
-  sessions       Session[]
+  id            String        @id @default(uuid())
+  name          String
+  email         String?       @unique
+  emailVerified DateTime?     @map("email_verified")
+  image         String?
+  role          String
+  password      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  Subscription  Subscription? 
 
   @@map("users")
+}
+
+model Subscription {
+  Id          String    @id @default(uuid())
+  level       Int       @default(0)
+  expire_Date DateTime?
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @unique
 }
 
 model Account {
@@ -109,7 +117,7 @@ model Product {
   countryId       String
   Payement_detail Payement_detail[]
   Version         Version?          @relation(fields: [versionId], references: [id], onDelete: SetNull)
-  versionId       String?           @default(" ")
+  versionId       String?           
 }
 
 model Payement {

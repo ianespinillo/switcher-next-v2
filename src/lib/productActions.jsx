@@ -1,9 +1,11 @@
 'use server'
 
+import { PrismaClient } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import prisma from './db'
+/* import prisma from './db' */
 import { z } from 'zod'
+const prisma = new PrismaClient()
 
 export async function createConfederation (prevState, formValues, img_url) {
   const schema = z.object({
@@ -90,7 +92,7 @@ export async function createCompetition (
     price: z.string().nonempty(),
     compType: z.string().nonempty(),
     desc: z.string().nonempty(),
-    version: z.string().nonempty(),
+    version: z.string()
   })
   const result = schema.safeParse({
     countryId: formData.get('countryId'),
@@ -99,9 +101,10 @@ export async function createCompetition (
     price: formData.get('price'),
     compType: formData.get('compType'),
     desc: formData.get('desc'),
-    version: formData.get('version'),
+    version: formData.get('version')
   })
   if (result.error) return { message: 'All fields are required' }
+
   const {
     countryId,
     competitionAbrev,
@@ -116,6 +119,7 @@ export async function createCompetition (
       name: competitionName
     }
   })
+
   if (competitionExist) return { message: 'Competition already exists' }
   await prisma.product.create({
     data: {
@@ -129,7 +133,7 @@ export async function createCompetition (
       name_3: competitionAbrev,
       big_url: big,
       fifaproject_url: fifaproject,
-      versionId: version
+      versionId: version ? version : null 
     }
   })
   redirect('/admin/competitions')
@@ -238,37 +242,16 @@ export async function getMyProducts (email) {
     select: {
       id: true,
       amount: true,
-      method: true
-    }
-  })
-  if (!userPayments) return null
-  const paymentIds = userPayments.map(payment => payment.id)
-  const payementDetails = await prisma.payement_detail.findMany({
-    where: {
-      payementId: {
-        in: paymentIds
-      }
-    },
-    select: {
-      productId: true,
-      payementId: true
-    }
-  })
-  if (!payementDetails) return null
-  const productIds = payementDetails.map(detail => detail.productId)
-  const uniqueProductIds = [...new Set(productIds)]
-  const prods = await prisma.product.findMany({
-    where: {
-      id: {
-        in: uniqueProductIds
+      method: true,
+      Payement_detail:{
+        select:{
+          productId: true
+          
+        }
       }
     }
   })
-  return {
-    prods,
-    userPayments,
-    payementDetails
-  }
+  
 }
 
 export async function productIsBuyed (prodId, user_email) {
@@ -308,7 +291,7 @@ export async function updateProduct (
     price: z.string().nonempty(),
     compType: z.string().nonempty(),
     desc: z.string().nonempty(),
-    version: z.string().nonempty(),
+    version: z.string().nonempty()
   })
   const result = schema.safeParse({
     countryId: formData.get('countryId'),
@@ -352,7 +335,7 @@ export async function updateProduct (
       name_3: competitionAbrev,
       big_url: big,
       fifaproject_url: fifaproject,
-      versionId: version,
+      versionId: version
     }
   })
   redirect('/admin/competitions')

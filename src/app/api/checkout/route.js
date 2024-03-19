@@ -3,9 +3,9 @@ import { NextResponse } from 'next/server'
 
 
 
-const enviroment = new paypal.core.LiveEnvironment(
-  process.env.PAYPAL_CLIENT_ID,
-  process.env.PAYPAL_SECRET_KEY
+const enviroment = new paypal.core.SandboxEnvironment(
+  process.env.NEXT_PUBLIC_PAYPAL_SANDBOX_CLIENT_ID,
+  process.env.NEXT_PAYPAL_SANDBOX_SECRET_KEY
 )
 const client = new paypal.core.PayPalHttpClient(enviroment)
 export async function POST (req, res) {

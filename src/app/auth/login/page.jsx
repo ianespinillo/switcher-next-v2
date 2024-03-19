@@ -25,9 +25,8 @@ export default function Login () {
     e.preventDefault()
     const res = await signIn('customLogin', {
       email: formValues.email,
-      redirect: true,
       password: formValues.password
-    })
+    }).then(() => Router.push('/'))
     
   }
 

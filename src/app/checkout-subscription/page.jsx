@@ -2,7 +2,7 @@
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { useSearchParams } from 'next/navigation'
 import { GoQuestion } from 'react-icons/go'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { subs } from '@/Data/subscriptions'
 import { updateSubscription } from '@/lib/userActions'
 import { useSession } from 'next-auth/react'
@@ -10,7 +10,9 @@ import { useSession } from 'next-auth/react'
 export default function Page_ () {
   const subQuery = useSearchParams().get('sub')
   const selectedSub = subs.find(sub => sub.level === Number(subQuery))
-  const {data:session}=useSession()
+  const { data: session } = useSession()
+  const [userId, setUserId] = useState(null)
+  useEffect(() => setUserId(session.user.id), [])
   return (
     <div className='flex flex-col lg:flex-row'>
       <div className='p-4 sm:basis-1/2'>
@@ -29,8 +31,8 @@ export default function Page_ () {
               <td className='px-1.5 py-2 text-balance'>{selectedSub.title}</td>
               <td className='px-1.5 py-2'>
                 <ul>
-                  {selectedSub.advantages.map((advantage, i) => (
-                    <li className='text-start list-disc' key={i}>
+                  {selectedSub.advantages.map(advantage => (
+                    <li className='text-start list-disc' key={advantage}>
                       {advantage}
                     </li>
                   ))}
@@ -56,10 +58,9 @@ export default function Page_ () {
         </div>
         <PayPalScriptProvider
           options={{
-            clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+            clientId: process.env.NEXT_PUBLIC_PAYPAL_SANDBOX_CLIENT_ID,
             components: 'buttons',
-            intent: 'subscription',
-            vault: true
+            intent: 'capture'
           }}
         >
           <PayPalButtons
@@ -69,17 +70,26 @@ export default function Page_ () {
               label: 'subscribe',
               disableMaxWidth: true
             }}
-            createSubscription={async (data, actions) => {
-              const order = await actions.subscription.create({
-                plan_id: selectedSub.idPaypal
-              })
-
-              return order
+            createOrder={(data, actions) => {
+              return actions.order
+                .create({
+                  purchase_units: [
+                    {
+                      amount: {
+                        value: (selectedSub.price * 1.1).toFixed(2)
+                      },
+                      description: selectedSub.title
+                    }
+                  ]
+                })
+                .then(orderId => {
+                  return orderId
+                })
             }}
             onApprove={async (data, actions) => {
-              const order = await actions.subscription.get()
-              if (order.status === 'ACTIVE') {
-                await updateSubscription(selectedSub.level, session.user.email)
+              const order = await actions.order.capture()
+              if (order.status === 'COMPLETED') {
+                await updateSubscription(userId, selectedSub.level)
               }
             }}
           />

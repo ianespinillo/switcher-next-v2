@@ -65,13 +65,13 @@ export function CheckoutTable ({ email }) {
             <h1 className='text-qatar-gold text-xl sm:text-2xl flex items-center justify-between'>
               Total:{' '}
               <span className='ml-3'>
-                ${(selectedSub.price * 1.1).toFixed(2)}
+                ${(total * 1.1).toFixed(2)}
               </span>
             </h1>
           </div>
           <PayPalScriptProvider
             options={{
-              clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
+              clientId: process.env.NEXT_PUBLIC_PAYPAL_SANDBOX_CLIENT_ID
             }}
           >
             <PayPalButtons

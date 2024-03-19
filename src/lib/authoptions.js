@@ -13,6 +13,13 @@ export const authOptions = {
   },
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
+  events: {
+    createUser: async ({ user }) => {
+      await prisma.subscription.create({
+        data: { userId: user.id }
+      })
+    }
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -93,7 +100,7 @@ export const authOptions = {
         const notUsedEmail = await prisma.user.findFirst({
           where: { email: credentials.email }
         })
-        const hashedPassword=await hash(credentials.password, 10)
+        const hashedPassword = await hash(credentials.password, 10)
         if (!notUsedEmail) {
           const newUser = await prisma.user.create({
             data: {
@@ -103,7 +110,12 @@ export const authOptions = {
               role:
                 credentials.email === 'espinilloian@hotmail.com'
                   ? 'admin'
-                  : 'user'
+                  : 'user',
+              Subscription: {
+                create: {
+                  level: 0
+                }
+              }
             }
           })
           return newUser
@@ -113,7 +125,7 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn ({ user, account, profile, email, credentials }) {
-      return true
+      return user
     },
     session: async ({ session, token, user }) => {
       return {
@@ -121,16 +133,20 @@ export const authOptions = {
         user: {
           ...session.user,
           role: token.role,
-          subLevel: token.subLevel
+          id: token.id
         }
       }
     },
     jwt: async ({ user, token, account }) => {
+      console.log(user)
       if (user) {
         token.role = user.role
-        token.subLevel = user.subscribeLevel
+        token.id = user.id
       }
       return token
+    },
+    async redirect ({ url, baseUrl }) {
+      return baseUrl
     }
   },
   session: {
