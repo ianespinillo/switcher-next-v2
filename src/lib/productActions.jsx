@@ -1,11 +1,11 @@
 'use server'
 
-import { PrismaClient } from '@prisma/client'
+import moment from 'moment'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-/* import prisma from './db' */
+import prisma from './db'
 import { z } from 'zod'
-const prisma = new PrismaClient()
+
 
 export async function createConfederation (prevState, formValues, img_url) {
   const schema = z.object({
@@ -133,7 +133,7 @@ export async function createCompetition (
       name_3: competitionAbrev,
       big_url: big,
       fifaproject_url: fifaproject,
-      versionId: version ? version : null 
+      versionId: version ? version : null
     }
   })
   redirect('/admin/competitions')
@@ -242,16 +242,41 @@ export async function getMyProducts (email) {
     select: {
       id: true,
       amount: true,
-      method: true,
-      Payement_detail:{
-        select:{
-          productId: true
-          
+      date: true,
+      Payement_detail: {
+        select: {
+          product: {
+            select: {
+              name: true
+            }
+          }
         }
       }
     }
   })
-  
+  userPayments.map(payement => {
+    payement.products= payement.Payement_detail.map(detail => detail.product.name)
+    delete payement.Payement_detail
+    payement.date = moment(payement.date).format('DD/MM/YYYY')
+  })
+  return userPayments
+}
+
+export async function productsBuyed(email) {
+  const userPayments = await prisma.payement.findMany({
+    where: {
+      user_email: email
+    },
+    select:{
+      Payement_detail: {
+        select: {
+          product: true
+        }
+      }
+    }
+  })
+  console.log(userPayments)
+  return userPayments[0].Payement_detail
 }
 
 export async function productIsBuyed (prodId, user_email) {
