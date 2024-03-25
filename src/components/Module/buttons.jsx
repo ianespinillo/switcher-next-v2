@@ -14,7 +14,7 @@ export const Buttons = ({id}) => {
     
     await filterProductById(id)
     .then(values =>{
-      console.log(values)
+      (values)
       setFormValues({
         countryId: values.countryId,
         competitionName: values.name,

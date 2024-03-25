@@ -73,7 +73,7 @@ export const EditModal = ({
     useEffect(() => {
       if (values != undefined) {
         setValues(values)
-        console.log(values)
+        (values)
       }
     }, [values])
 

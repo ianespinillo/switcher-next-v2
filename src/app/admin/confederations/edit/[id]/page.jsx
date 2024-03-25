@@ -44,7 +44,7 @@ export default function Edit_confederation ({ params: { id } }) {
   const [state, formAction] = useFormState(serverAc, initialState)
   const { Url, ConfedAbrev, ConfedName } = formValues
   async function serverAc (prevState, formData) {
-    console.log(prevState)
+    (prevState)
     const res = await updateConfederation(prevState, formData, id, formValues.Url)
     res.message == null && router.back()
   }

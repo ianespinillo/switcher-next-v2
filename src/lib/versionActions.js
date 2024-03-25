@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { redirect } from 'next/navigation'
 
 export async function createVersion (formData) {
-  console.log(formData.get('releaseDate'))
+  (formData.get('releaseDate'))
   const schema = z.object({
     versionNumber: z.string().nonempty(),
     releaseDate: z.string().nonempty()

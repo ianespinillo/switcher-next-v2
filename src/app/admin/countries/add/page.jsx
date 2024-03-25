@@ -86,7 +86,7 @@ export default function Add_country () {
     reset,
     setFormValues
   ] = useForm(initFormValues)
-  console.log(formValues)
+  (formValues)
   const { countryName, countryAbrev, confedName } = formValues
 
   useLayoutEffect(() => {

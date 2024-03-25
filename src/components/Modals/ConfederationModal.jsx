@@ -35,7 +35,7 @@ export const ConfederationModal = ({
     message: null
   }
   async function serverAc (prevState, formData) {
-    console.log(prevState)
+    (prevState)
     const res = await createConfederation(prevState, formData, formValues.Url)
     res.message==null && closeModal()
     return res

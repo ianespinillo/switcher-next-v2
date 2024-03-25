@@ -21,7 +21,7 @@ export async function POST (req, res) {
     })
     return NextResponse.json({ ok: true, competitions }, { status: 200 })
   } catch (error) {
-    console.log(error.message)
+    (error.message)
     return NextResponse.json(
       {
         ok: false,

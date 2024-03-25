@@ -275,8 +275,7 @@ export async function productsBuyed(email) {
       }
     }
   })
-  console.log(userPayments)
-  return userPayments[0].Payement_detail
+  return userPayments
 }
 
 export async function productIsBuyed (prodId, user_email) {
@@ -443,7 +442,7 @@ export const deleteById = async (id, type) => {
             id: id
           }
         })
-        console.log('Successfully deleted')
+        ('Successfully deleted')
       } catch (error) {
         console.error('Error deleting country', error)
       }

@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authoptions'
 export default async function Switcher_subs () {
   const session = await getServerSession(authOptions)
-  console.log(session)
+  (session)
   return (
     <div className='flex flex-wrap justify-center items-center min-h-[calc(100vh-62px)] h-full w-full gap-4'>
       {subs.map((sub, i) => (

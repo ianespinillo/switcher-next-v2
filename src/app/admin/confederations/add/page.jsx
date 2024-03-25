@@ -33,7 +33,7 @@ export default function Page_ () {
     message: null
   }
   async function serverAc (prevState, formData) {
-    console.log(prevState)
+    (prevState)
     const res = await createConfederation(prevState, formData, formValues.Url)
     res.message == null && router.back()
   }

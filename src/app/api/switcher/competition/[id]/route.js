@@ -27,7 +27,7 @@ export async function POST (req, res) {
         })
         const diff = v.free_release - day
         const daysDiff = Math.floor(diff / (1000 * 60 * 60 * 24))
-        console.log(daysDiff)
+        (daysDiff)
         if (daysDiff > 0) {
           const subLevel = await prisma.user.findFirst({
             where: {

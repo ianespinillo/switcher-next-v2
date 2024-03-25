@@ -138,7 +138,7 @@ export const authOptions = {
       }
     },
     jwt: async ({ user, token, account }) => {
-      console.log(user)
+      (user)
       if (user) {
         token.role = user.role
         token.id = user.id

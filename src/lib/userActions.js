@@ -4,7 +4,7 @@ import prisma from '@/lib/db';
 import { z } from 'zod'
 import moment from 'moment';
 export async function updateUser (prevState, formValues) {
-  console.log(formValues)
+  (formValues)
   const schema = z.object({
     name: z.string().nonempty(),
     email: z.string().email(),

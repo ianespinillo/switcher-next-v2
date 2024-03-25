@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
   async function middleware(req) {
-    console.log(req.nextauth.token);
+    (req.nextauth.token);
     if (
       req.nextUrl.pathname === "/admin/dashboard" &&
       req.nextauth.token?.role !== "admin"

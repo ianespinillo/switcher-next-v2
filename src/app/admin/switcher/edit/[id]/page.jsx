@@ -17,7 +17,7 @@ export default function Edit_version ({ params: { id } }) {
   useEffect(() => {
     const fetchDate = async () => {
       const { version_number, free_release } = await getVersionById(id)
-      console.log(version)
+      (version)
       setVersion(version_number)
       setDate(free_release)
     }

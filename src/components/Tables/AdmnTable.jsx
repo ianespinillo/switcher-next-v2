@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { deleteById } from '@/lib/productActions'
 
 export function AdmnTable ({ TABLE_HEAD, TABLE_ROWS, TABLE_LINKS, DELETE_ID }) {
-  console.log(TABLE_LINKS)
+  (TABLE_LINKS)
   return (
     <ThemeProvider>
       <Card className='h-full w-full rounded-b-md'>
