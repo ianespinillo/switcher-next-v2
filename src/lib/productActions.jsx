@@ -6,7 +6,6 @@ import { redirect } from 'next/navigation'
 import prisma from './db'
 import { z } from 'zod'
 
-
 export async function createConfederation (prevState, formValues, img_url) {
   const schema = z.object({
     ConfedName: z.string().nonempty(),
@@ -255,19 +254,21 @@ export async function getMyProducts (email) {
     }
   })
   userPayments.map(payement => {
-    payement.products= payement.Payement_detail.map(detail => detail.product.name)
+    payement.products = payement.Payement_detail.map(
+      detail => detail.product.name
+    )
     delete payement.Payement_detail
     payement.date = moment(payement.date).format('DD/MM/YYYY')
   })
   return userPayments
 }
 
-export async function productsBuyed(email) {
+export async function productsBuyed (email) {
   const userPayments = await prisma.payement.findMany({
     where: {
       user_email: email
     },
-    select:{
+    select: {
       Payement_detail: {
         select: {
           product: true
@@ -432,17 +433,11 @@ export const deleteById = async (id, type) => {
       break
     case 'country':
       try {
-        await prisma.product.deleteMany({
-          where: {
-            countryId: id
-          }
-        })
         await prisma.country.delete({
           where: {
             id: id
           }
-        })
-        ('Successfully deleted')
+        })('Successfully deleted')
       } catch (error) {
         console.error('Error deleting country', error)
       }

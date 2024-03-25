@@ -113,7 +113,7 @@ model Product {
   logo_url        String
   big_url         String
   fifaproject_url String?
-  country         Country           @relation(fields: [countryId], references: [id])
+  country         Country           @relation(fields: [countryId], references: [id], onDelete: Cascade)
   countryId       String
   Payement_detail Payement_detail[]
   Version         Version?          @relation(fields: [versionId], references: [id], onDelete: SetNull)
