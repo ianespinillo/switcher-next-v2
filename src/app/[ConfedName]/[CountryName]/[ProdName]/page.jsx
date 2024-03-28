@@ -1,6 +1,7 @@
+'use server'
+
 import Link from 'next/link'
 import React from 'react'
-import styles from '@/Styles/Product.module.css'
 import AddButton from '@/components/UI/AddButton'
 import { filterProduct, productIsBuyed } from '@/lib/productActions'
 import { getServerSession } from 'next-auth'

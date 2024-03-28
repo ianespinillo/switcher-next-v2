@@ -14,7 +14,7 @@ export function AdmnTable ({ TABLE_HEAD, TABLE_ROWS, TABLE_LINKS, DELETE_ID }) {
   return (
     <ThemeProvider>
       <Card className='h-full w-full rounded-b-md'>
-        <table className='w-full min-w-max table-auto text-center '>
+        <table className='w-full min-w-max table-auto text-center max-h-screen'>
           <thead className='bg-qatar-gold'>
             <tr>
               {TABLE_HEAD.map(head => (
@@ -29,7 +29,7 @@ export function AdmnTable ({ TABLE_HEAD, TABLE_ROWS, TABLE_LINKS, DELETE_ID }) {
               ))}
             </tr>
           </thead>
-          <tbody className='bg-qatar-purple'>
+          <tbody className='bg-qatar-purple h-[80vh] overflow-y-auto'>
             {TABLE_ROWS.map((prop, i) => {
               const isLast = i === TABLE_ROWS.length - 1
               const classes = isLast ? 'p-4' : 'p-4 border-b border-qatar-gold'

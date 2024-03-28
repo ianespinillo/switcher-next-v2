@@ -1,3 +1,4 @@
+'use server'
 import React from 'react'
 import Link from 'next/link'
 import { filterByCountry } from '@/lib/productActions'

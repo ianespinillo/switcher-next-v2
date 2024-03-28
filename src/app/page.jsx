@@ -1,19 +1,19 @@
-
+'use server'
 import React from 'react'
 import Link from 'next/link'
-import Icon from '../../public/Logo_2024.ico';
+
 import { obtainConfederations } from '@/lib/productActions'
 
 
 
 export default async function Page_ ({ searchParams }) {
   const confederations = await obtainConfederations()
-  
+  console.log('hola')
   return (
     <>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-24'>
         {confederations.map((confederacion, i) => (
-          <Link className='confederacion' key={i} href={confederacion.confed_3}>
+          <Link className='confederacion' key={confederacion.id} href={confederacion.confed_3}>
             <img
               src={confederacion.img_url}
               className='ImgConfederacion max-w-[200px] lg:max-w-[300px]'
