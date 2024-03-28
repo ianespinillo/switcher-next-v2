@@ -156,6 +156,7 @@ export async function obtainProducts () {
 }
 
 export async function obtainConfederations () {
+  'use server'
   const confedList = await prisma.confederation.findMany({
     orderBy: {
       confed_3: 'asc'

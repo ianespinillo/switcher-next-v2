@@ -1,4 +1,3 @@
-'use server'
 import React from 'react'
 import Link from 'next/link'
 
@@ -8,7 +7,7 @@ import { obtainConfederations } from '@/lib/productActions'
 
 export default async function Page_ ({ searchParams }) {
   const confederations = await obtainConfederations()
-  console.log('hola')
+  console.log('first')
   return (
     <>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-24'>
