@@ -84,6 +84,7 @@ export async function createCompetition (
   big,
   fifaproject
 ) {
+  "use server"
   const schema = z.object({
     countryId: z.string().nonempty(),
     competitionName: z.string().nonempty(),
@@ -102,6 +103,7 @@ export async function createCompetition (
     desc: formData.get('desc'),
     version: formData.get('version')
   })
+  
   if (result.error) return { message: 'All fields are required' }
 
   const {
@@ -115,11 +117,13 @@ export async function createCompetition (
   } = result.data
   const competitionExist = await prisma.product.findFirst({
     where: {
-      name: competitionName
+      countryId: countryId,
+      
     }
   })
 
-  if (competitionExist) return { message: 'Competition already exists' }
+
+  if (competitionExist && competitionExist.name === competitionName) return { message: 'Competition already exists' }
   await prisma.product.create({
     data: {
       description: desc,
@@ -132,7 +136,7 @@ export async function createCompetition (
       name_3: competitionAbrev,
       big_url: big,
       fifaproject_url: fifaproject,
-      versionId: version ? version : null
+      versionId: version || null
     }
   })
   redirect('/admin/competitions')

@@ -20,7 +20,7 @@ import { RxCross1 } from 'react-icons/rx'
 export const LoggedNavbar = () => {
   Modal.setAppElement('#__next')
   const router = useRouter()
-  const path= usePathname().split('/')
+  const path = usePathname().split('/')
   const confed = path[1]
 
   const { data: session } = useSession()
@@ -130,7 +130,7 @@ export const LoggedNavbar = () => {
           className='bg-transparent text-4xl block md:hidden'
           onClick={handleClick}
         >
-          <IoMdMenu  />
+          <IoMdMenu />
         </button>
       </div>
       <ul
@@ -183,9 +183,7 @@ export const LoggedNavbar = () => {
         contentLabel='Example Modal'
         overlayClassName='Overlay'
       >
-        <div className='close' onClick={closeModal}>
-          <IoIosCloseCircle />
-        </div>
+        <IoIosCloseCircle onClick={() => closeModal()} className='cursor-pointer fixed right-7' />
         <table className='  text-center w-full qatar mt-5'>
           <thead className='bg-qatar-gold text-center text-qatar-purple '>
             <tr>

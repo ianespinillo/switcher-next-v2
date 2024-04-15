@@ -1,12 +1,15 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 export default function Page_ () {
   const searchParams = useSearchParams()
   const paramsSplited = searchParams.toString().split('&')
   const router = useRouter()
+  if(paramsSplited.length == 0){
+    router.push('/')
+  }   
   return (
     <div className='w-full flex justify-center'>
       <div className='w-8/12 h-full flex justify-center flex-col gap-3 items-center'>
