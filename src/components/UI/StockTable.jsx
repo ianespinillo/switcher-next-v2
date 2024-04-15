@@ -5,15 +5,10 @@ import {
   TableRow,
   TableHead,
   TableBody,
-  TableCell,
-  Button
+  TableCell
 } from '@/components/UI/Table'
-import { IconContext } from 'react-icons'
 import { BiTrash, BiPen } from 'react-icons/bi'
 import React from 'react'
-
-import { Buttons } from '../Module/buttons'
-import { EditModal } from '../Modals/EditModal'
 
 export const StockTable = async ({
   data = [],
