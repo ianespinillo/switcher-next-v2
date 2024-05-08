@@ -15,7 +15,7 @@ export function ProductCard ({ preview, price, name, description }) {
     <ThemeProvider>
       <Card className='w-full shadow-md shadow-qatar-purple hover:scale-105 duration-300'>
         <CardHeader floated={false} className='h-fit'>
-          <img src={preview} alt='Competition preview' />
+          <img src={preview} alt='Competition preview' className='w-full' />
         </CardHeader>
         <CardBody className='text-center'>
           <Typography variant='h4' color='blue-gray' className='mb-2'>

@@ -22,11 +22,11 @@ export default async function Page_ ({ params: { ConfedName, CountryName } }) {
       </header>
 
       <div className='bg-white sm:p-[30px] w-full'>
-        <div className='flex flex-wrap sm:grid md:grid md:grid-cols-2 lg:grid-cols-3'>
+        <div className='flex flex-wrap sm:grid md:grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {childrens.map((competition, i) => (
             <Link
               
-              key={i}
+              key={competition.id}
               href={CountryName + '/' + competition.name}
             >
               <ProductCard
