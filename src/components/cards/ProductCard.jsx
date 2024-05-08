@@ -5,7 +5,6 @@ import {
   CardBody,
   CardFooter,
   Typography,
-  Tooltip,
   Button,
   ThemeProvider
 } from '@material-tailwind/react'
