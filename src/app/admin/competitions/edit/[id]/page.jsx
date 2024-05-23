@@ -163,62 +163,56 @@ export default function Edit_competition ({ params: { id } }) {
         .delete({
           url: previewUrl
         })
-        .then(() => setFormValues(prev => ({ ...prev, previewUrl: '' })))
+        .then(() => {
+          edgestore.publicFiles
+            .upload({
+              file: preview
+            })
+            .then(res => setFormValues({ ...formValues, previewUrl: res.url }))
+        })
     }
     if (logoUrl && Files.logo) {
       edgestore.publicFiles
-        .delete({
-          url: logoUrl
+        .upload({
+          file: logo,
+          options: {
+            replaceTargetUrl: logoUrl
+          }
         })
-        .then(() => setFormValues(prev => ({ ...prev, logoUrl: '' })))
+        .then(res => {
+          setFormValues({ ...formValues, previewUrl: res.url })
+        })
+        .catch(err => console.log(err))
     }
     if (bigFile && Files.big) {
       edgestore.publicFiles
         .delete({
           url: bigFile
         })
-        .catch(() => setFormValues(prev => ({ ...prev, bigFile: '' })))
+        .then(() => {
+          edgestore.publicFiles
+            .upload({
+              file: big
+            })
+            .then(res => setFormValues({ ...formValues, bigFile: res.url }))
+        })
     }
     if (fifaprojectFile && Files.fifaproject) {
       edgestore.publicFiles
         .delete({
           url: fifaprojectFile
         })
-        .then(() => setFormValues(prev => ({ ...prev, fifaprojectFile: '' })))
+        .then(() => {
+          edgestore.publicFiles
+            .upload({
+              file: fifaproject
+            })
+            .then(res =>
+              setFormValues({ ...formValues, fifaprojectFile: res.url })
+            )
+        })
     }
   }, [previewUrl, logoUrl, bigFile, fifaprojectFile, Files])
-  useEffect(() => {
-    big &&
-      edgestore.publicFiles
-        .upload({
-          file: big
-        })
-        .then(res => setFormValues({ ...formValues, bigFile: res.url }))
-  }, [big])
-  useEffect(() => {
-    fifaproject &&
-      edgestore.publicFiles
-        .upload({
-          file: fifaproject
-        })
-        .then(res => setFormValues({ ...formValues, fifaprojectFile: res.url }))
-  }, [fifaproject])
-  useEffect(() => {
-    preview &&
-      edgestore.publicFiles
-        .upload({
-          file: preview
-        })
-        .then(res => setFormValues({ ...formValues, previewUrl: res.url }))
-  }, [preview])
-  useEffect(() => {
-    logo &&
-      edgestore.publicFiles
-        .upload({
-          file: logo
-        })
-        .then(res => setFormValues({ ...formValues, logoUrl: res.url }))
-  }, [logo])
 
   return (
     <div className='absolute left-[20%] w-4/5 flex justify-center items-center h-[calc(100vh-62px)]'>

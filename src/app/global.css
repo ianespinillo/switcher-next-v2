@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @import url(../Styles/Confederacion.module.css);
-@import url(../Styles/Country.module.css);
+
 @import url(../Styles/Navbar.module.css);
 
 @font-face {
@@ -140,33 +140,3 @@ a {
   color: tomato;
 }
 
-/* thead,
-tbody,
-tfoot {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-tr {
-  align-items: center;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-}
-th,
-td {
-  display: flex;
-  justify-content: center;
-  font-weight: bold;
-  width: 33%;
-  align-items: center;
-  text-align: center;
-  color: #680a4d;
-  font-family: Qatar22;
-}
-
-tr > svg {
-  cursor: pointer;
-  font-size: 34px;
-  fill: #680a4d;
-} */

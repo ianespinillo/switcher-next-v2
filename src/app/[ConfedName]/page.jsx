@@ -28,7 +28,7 @@ export default async function index ({ params: { ConfedName } }) {
           >
             <img
               src={country.country_img_url}
-              className='max-w-[200px] lg:max-w-[300px]'
+              className='max-w-[200px] lg:max-w-[300px] hover:scale-105 duration-[450ms] cursor-pointer'
               alt='ConfederationImage'
             />
           </Link>

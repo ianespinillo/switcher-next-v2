@@ -1,16 +1,11 @@
-'use client'
+
+import React from 'react'
 
 import { UsersTable } from '@/components/UI/UsersTable';
+import {getUsers} from '../../../lib/userActions';
 
-import React, { useEffect, useState } from 'react'
-
-export default function Page_() {
-  const [data, setData] = useState([])
-  useEffect(() =>{
-    fetch('/api/users')
-      .then(res => res.json())
-        .then( data => setData(data.usersList))
-  }, []);
+export default async function Page_() {
+  const data = await getUsers()
   return (
     <UsersTable titles={['ID', 'Username', 'Email', 'Actions']} users={data} />
   )

@@ -543,3 +543,4 @@ export const getCountryById = async id =>
 
 export const getCompetitionById = async id =>
   await prisma.product.findFirst({ where: { id: id } })
+

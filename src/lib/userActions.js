@@ -1,10 +1,9 @@
 'use server'
 import { redirect } from 'next/dist/server/api-utils'
-import prisma from '@/lib/db';
+import prisma from '@/lib/db'
 import { z } from 'zod'
-import moment from 'moment';
+import moment from 'moment'
 export async function updateUser (prevState, formValues) {
-  (formValues)
   const schema = z.object({
     name: z.string().nonempty(),
     email: z.string().email(),
@@ -39,14 +38,13 @@ export async function updateUser (prevState, formValues) {
 }
 
 export const updateSubscription = async (userId, subLevel) => {
-  
   await prisma.subscription.update({
     where: {
       userId
     },
     data: {
       level: subLevel,
-      expire_Date: new Date(moment().add(30, 'days')) 
+      expire_Date: new Date(moment().add(30, 'days'))
     }
   })
   return redirect('/dashboard/my-subscription')
@@ -54,6 +52,16 @@ export const updateSubscription = async (userId, subLevel) => {
 
 export const getSub = async id =>
   await prisma.subscription.findFirst({
-    where: { userId: id},
-    select: { expire_Date: true, level: true}
+    where: { userId: id },
+    select: { expire_Date: true, level: true }
   })
+
+export const getUsers = async () => {
+  return await prisma.user.findMany({
+    where: {
+      email: {
+        notIn: ['espinilloian@hotmail.com', 'iantespinillo@gmail.com']
+      }
+    }
+  })
+}
