@@ -13,6 +13,7 @@ export const metadata = {
 }
 
 export default async function RootLayout ({ children }) {
+  
   return (
     <html lang='en' id='__next'>
       <body className='w-full h-full'>

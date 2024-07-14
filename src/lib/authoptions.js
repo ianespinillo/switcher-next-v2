@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
 import { compare, hash } from 'bcryptjs'
+import { redirect } from 'next/navigation'
 
 const prisma = new PrismaClient()
 
@@ -15,10 +16,12 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   events: {
     createUser: async ({ user }) => {
+      console.log(user)
       await prisma.subscription.create({
         data: { userId: user.id }
       })
-    }
+    },
+    
   },
   providers: [
     GoogleProvider({
@@ -29,7 +32,8 @@ export const authOptions = {
           id: profile.sub,
           name: `${profile.given_name} ${profile.family_name}`,
           email: profile.email,
-          role: profile.email == 'iantespinillo@gmail.com' ? 'admin' : 'user'
+          role: profile.email == 'iantespinillo@gmail.com' ? 'admin' : 'user',
+          image: profile.picture
         }
       }
     }),
@@ -125,7 +129,17 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn ({ user, account, profile, email, credentials }) {
-      return user
+      console.log(user, account, profile)
+      /* const usr = await prisma.user.findFirst({
+        where: {
+          OR: [{ id: user.id }, { email: user.email }]
+        }
+      })
+      console.log(usr)
+      if (!usr.password || (account.provider === 'google' && !usr)) {
+        return '/auth/change-password?id=' + usr.id
+      } */
+      return true
     },
     session: async ({ session, token, user }) => {
       return {
@@ -138,7 +152,6 @@ export const authOptions = {
       }
     },
     jwt: async ({ user, token, account }) => {
-      (user)
       if (user) {
         token.role = user.role
         token.id = user.id
@@ -146,7 +159,8 @@ export const authOptions = {
       return token
     },
     async redirect ({ url, baseUrl }) {
-      return baseUrl
+      console.log(url)
+      return url.startsWith(baseUrl) ? url : baseUrl
     }
   },
   session: {

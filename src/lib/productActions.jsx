@@ -84,7 +84,7 @@ export async function createCompetition (
   big,
   fifaproject
 ) {
-  "use server"
+  'use server'
   const schema = z.object({
     countryId: z.string().nonempty(),
     competitionName: z.string().nonempty(),
@@ -103,7 +103,7 @@ export async function createCompetition (
     desc: formData.get('desc'),
     version: formData.get('version')
   })
-  
+
   if (result.error) return { message: 'All fields are required' }
 
   const {
@@ -117,13 +117,12 @@ export async function createCompetition (
   } = result.data
   const competitionExist = await prisma.product.findFirst({
     where: {
-      countryId: countryId,
-      
+      countryId: countryId
     }
   })
 
-
-  if (competitionExist && competitionExist.name === competitionName) return { message: 'Competition already exists' }
+  if (competitionExist && competitionExist.name === competitionName)
+    return { message: 'Competition already exists' }
   await prisma.product.create({
     data: {
       description: desc,
@@ -139,11 +138,23 @@ export async function createCompetition (
       versionId: version || null
     }
   })
-  redirect('/admin/competitions')
+  redirect('/admin/competitions?page=1')
 }
 
-export async function obtainProducts () {
-  const products = await prisma.product.findMany()
+export async function obtainProducts (page, q) {
+  const products = await prisma.product.findMany({
+    where: {
+      name: {
+        contains: q,
+        mode: 'insensitive'
+      }
+    },
+    orderBy: {
+      name: 'asc'
+    },
+    take: 10,
+    skip: page * 10
+  })
   let prodsWithCN = []
   await Promise.all(
     products.map(async prod => {
@@ -156,7 +167,7 @@ export async function obtainProducts () {
       prodsWithCN.push(prod)
     })
   )
-  return prodsWithCN
+  return { prods: prodsWithCN, lenght: products.length }
 }
 
 export async function obtainConfederations () {
@@ -368,7 +379,7 @@ export async function updateProduct (
       versionId: version
     }
   })
-  redirect('/admin/competitions')
+  redirect('/admin/competitions?page=1')
 }
 
 export async function getPayments () {
@@ -544,3 +555,12 @@ export const getCountryById = async id =>
 export const getCompetitionById = async id =>
   await prisma.product.findFirst({ where: { id: id } })
 
+export const getCompetitionNumbers = async (q) =>
+  await prisma.product.count({
+    where: {
+      name: {
+        contains: q,
+        mode: 'insensitive'
+      }
+    }
+  })

@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { filterByCountry } from '@/lib/productActions'
 import { ProductCard } from '@/components/cards/ProductCard'
 
+
 export default async function Page_ ({ params: { ConfedName, CountryName } }) {
+  
   const { countryId, childrens } = await filterByCountry(CountryName)
   return (
     <>

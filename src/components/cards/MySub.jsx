@@ -7,6 +7,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authoptions'
 export const MySub = async () => {
   const {user} = await getServerSession(authOptions)
+  console.log(user)
   const { expire_Date, level: subscribeLevel } = await getSub(user.id)
   const mySub = subs.find(sub => subscribeLevel === sub.level)
   return (

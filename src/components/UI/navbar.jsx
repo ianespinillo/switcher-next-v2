@@ -7,6 +7,7 @@ import confedStyles from '@/Styles/Confederacion.module.css'
 import { LoggedNavbar } from './Navbars/LoggedNavbar'
 import { UnloggedNavbar } from './Navbars/UnloggedNavbar'
 import styles from '@/Styles/Navbar.module.css'
+import { userHasPassword } from '@/lib/userActions'
 
 
 
@@ -14,11 +15,15 @@ import styles from '@/Styles/Navbar.module.css'
 
 
 export const Navbar = () => {
-
-  
   const location = usePathname()
-  
   const { data: session, status } = useSession()
+  async function checkPsw() {
+    if (status === 'authenticated') {
+      await userHasPassword(session.user.id)
+    }
+  }
+  
+  
   const isLogged = status === 'authenticated'
   const publicRoutes=['custom-job', 'contact', 'checkout', 'admin', 'switcher']
   useEffect(() => {
@@ -41,6 +46,9 @@ export const Navbar = () => {
           document.getElementById(styles.submenu).removeAttribute('class')
           document.getElementById('submenu').classList.add(styles.submenu)
         }
+      }
+      if(location === '/'){
+        checkPsw().then(()=> console.log(location));
       }
     }
   }, [location])

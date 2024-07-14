@@ -1,13 +1,15 @@
 import React from 'react'
 
-import { StockTable } from '@/components/UI/StockTable'
-
-import { obtainProducts } from '@/lib/productActions'
+import { getCompetitionNumbers, obtainProducts } from '@/lib/productActions'
 import Link from 'next/link'
 import { AdmnTable } from '@/components/Tables/AdmnTable'
+import { Pagination } from '@/components/UI/Pagination/Pagintaion'
+import {InputDebouncer } from '@/components/Form/InputDebouncer'
 
-export default async function Product () {
-  const data = await obtainProducts()
+export default async function Product ({ searchParams }) {
+  const data = await obtainProducts(Number(searchParams.page) - 1,  searchParams.q || '' )
+  const nCompetitions = await getCompetitionNumbers(searchParams.q || '')
+  //console.log(searchParams.q)
   return (
     <div className='absolute left-[20%] w-4/5 flex flex-col gap-4'>
       <div className='flex justify-end p-4 py-6'>
@@ -17,18 +19,25 @@ export default async function Product () {
         >
           + Add Competition
         </Link>
+        <InputDebouncer />
       </div>
       <div className='p-3'>
         <AdmnTable
           TABLE_HEAD={['ID', 'Name', 'Logo', 'Abreviation', 'Actions']}
-          TABLE_ROWS={data.map(product => ({
+          TABLE_ROWS={data.prods.map(product => ({
             id: product.id,
             name: product.name,
             logo: product.logo_url,
             alias: product.name_3
           }))}
-          TABLE_LINKS={data.map(({ id }) => `/admin/competitions/edit/${id}`)}
-          DELETE_ID={data.map(({ id }) => ({id:id, type: 'competition'}))}
+          TABLE_LINKS={data.prods.map(({ id }) => `/admin/competitions/edit/${id}`)}
+          DELETE_ID={data.prods.map(({ id }) => ({ id: id, type: 'competition' }))}
+        />
+      </div>
+      <div className='flex justify-center w-[100%]'>
+        <Pagination
+          number={Number(nCompetitions)}
+          actualPage={Number(searchParams.page)}
         />
       </div>
     </div>

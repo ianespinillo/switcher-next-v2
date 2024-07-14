@@ -2,6 +2,8 @@
 import { useForm } from '@/hooks/useForm'
 import { useEdgeStore } from '@/lib/utils/edgestore'
 import React, { useEffect, useState } from 'react'
+import { updateUser } from '@/lib/userActions'
+import { useFormState } from 'react-dom'
 
 export default function EditProfile ({ user: { user } }) {
   const { name: username, email: usrEmail, image } = user
@@ -13,37 +15,41 @@ export default function EditProfile ({ user: { user } }) {
     confirmPassword: '',
     avatarUrl: image || ''
   }
+  const initialState = {
+    message: null
+  }
   const [file, setFile] = useState(null)
   const { edgestore } = useEdgeStore()
   const [error, setError] = useState({ state: false, msg: null })
   const [formValues, handleInputChange, , , setFormValues] =
-    useForm(initialValues)
+  useForm(initialValues)
   const { name, email, oldPassword, newPassword, confirmPassword, avatarUrl } =
-    formValues
-  const handleSubmit = e => {
-    e.preventDefault()
-    if (
-      newPassword != confirmPassword ||
-      newPassword == '' ||
-      oldPassword == ''
-    ) {
+  formValues
+  const action = async (prevState, formData) => {
+    if (newPassword != confirmPassword || newPassword == '') {
       setError({
         state: true,
         msg: 'Passwords do not match'
       })
     }
+    await updateUser(prevState,formData, avatarUrl)
   }
+  const [prevState,formAction]=useFormState(action, {message:null})
   useEffect(() => {
     if (file) {
-      edgestore.publicFiles.upload({
-        file,
-
-      })
-      .then((res) =>setFormValues({...formValues, avatarUrl: res.url}))
+      edgestore.publicFiles
+        .upload({
+          file
+        })
+        .then(res => setFormValues({ ...formValues, avatarUrl: res.url }))
     }
   }, [file])
+
   return (
-    <form className='flex flex-col gap-4 qatar w-7/12 md:w-1/3' onSubmit={handleSubmit}>
+    <form
+      className='flex flex-col gap-4 qatar w-7/12 md:w-1/3'
+      action={formAction}
+    >
       {error.state && <p className='text-red-500 p-3'>{error.msg}</p>}
       <div className=' flex flex-col gap-1'>
         <label className='text-qatar-gold' htmlFor='name'>
@@ -131,10 +137,9 @@ export default function EditProfile ({ user: { user } }) {
           accept='.png,.jpg, .jpeg,'
           className='bg-qatar-gold text-qatar-purple file:text-qatar-gold file:bg-qatar-purple file:border-0 cursor-pointer'
           onChange={e => setFile(e.target.files[0])}
-          
         />
       </div>
-      <button className='bg-transparent text-qatar-gold w-full text-lg rounded-lg outline outline-qatar-gold outline-2 hover:bg-qatar-gold hover:text-qatar-purple hover:transition-all hover:duration-500'>
+      <button className='bg-transparent text-qatar-gold w-full text-lg rounded-lg outline outline-qatar-gold outline-2 hover:bg-qatar-gold hover:text-qatar-purple hover:transition-all hover:duration-500 focus:outline focus:outline-2 focus:outline-qatar-gold'>
         Save Changes
       </button>
     </form>

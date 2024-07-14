@@ -11,7 +11,11 @@ export default async function index ({ params: { ConfedName } }) {
     <>
       <header>
         <div className='flex justify-center items-center flex-col gap-4 sm:flex-row sm:gap-8 p-2'>
-          <img src={confed.img_url} alt='Confederation logo' className='max-w-[300px]' />
+          <img
+            src={confed.img_url}
+            alt='Confederation logo'
+            className='max-w-[300px]'
+          />
           <h1 className='text-6xl text-qatar-gold qatar'>{ConfedName}</h1>
         </div>
       </header>
@@ -20,11 +24,7 @@ export default async function index ({ params: { ConfedName } }) {
           <Link
             className='confederacion'
             key={i}
-            href={
-              ConfedName == 'fifa'
-                ? `${ConfedName}/${ConfedName}/${country.name}`
-                : `${ConfedName}/${country.name}`
-            }
+            href={`${ConfedName}/${country.name}`}
           >
             <img
               src={country.country_img_url}
@@ -38,13 +38,12 @@ export default async function index ({ params: { ConfedName } }) {
   )
 }
 
-export async function generateMetadata({ params: { ConfedName } }) {
-  const {confed_3, img_url} = await getConfed(ConfedName)
+export async function generateMetadata ({ params: { ConfedName } }) {
+  const { confed_3, img_url } = await getConfed(ConfedName)
   return {
     title: confed_3,
     icons: {
       icon: img_url
     }
   }
-  
 }

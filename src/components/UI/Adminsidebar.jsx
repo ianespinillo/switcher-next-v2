@@ -23,7 +23,7 @@ export function Adminsidebar () {
         <FaFlag className={styles.icon} />
         <span className={styles.text}>Countries</span>
       </Link>
-      <Link className={styles.link} href='/admin/competitions'>
+      <Link className={styles.link} href='/admin/competitions?page=1'>
         <FaTrophy className={styles.icon} />
         <span className={styles.text}>Competitions</span>
       </Link>

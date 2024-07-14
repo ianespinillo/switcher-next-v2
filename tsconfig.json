@@ -30,7 +30,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/api/checkout/route.js", "src/app/switcher/page.jsx", "src/middlewares/JWT.js", "src/lib/dbjts"  ],
+, "src/app/api/checkout/route.js", "src/app/switcher/page.jsx", "src/middlewares/JWT.js", "src/lib/dbjts", "src/components/UI/Pagination/Pagintaion.jsx"  ],
   "exclude": [
     "node_modules"
   ]
