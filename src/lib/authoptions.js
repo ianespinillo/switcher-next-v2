@@ -21,7 +21,19 @@ export const authOptions = {
         data: { userId: user.id }
       })
     },
-    
+    signIn: async ({ user }) => {
+      const sub = await prisma.subscription.findUnique({
+        where: {
+          userId: user.id
+        }
+      })
+
+      if (!sub) {
+        await prisma.subscription.create({
+          data: { userId: user.id }
+        })
+      }
+    }
   },
   providers: [
     GoogleProvider({

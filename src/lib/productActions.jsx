@@ -475,6 +475,8 @@ export const deleteById = async (id, type) => {
       })
       revalidatePath('/admin/switcher')
       break
+    case 'user':
+      break;
     default:
       break
   }
@@ -555,7 +557,7 @@ export const getCountryById = async id =>
 export const getCompetitionById = async id =>
   await prisma.product.findFirst({ where: { id: id } })
 
-export const getCompetitionNumbers = async (q) =>
+export const getCompetitionNumbers = async q =>
   await prisma.product.count({
     where: {
       name: {

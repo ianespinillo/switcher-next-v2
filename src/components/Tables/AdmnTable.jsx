@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { deleteById } from '@/lib/productActions'
 
 export function AdmnTable ({ TABLE_HEAD, TABLE_ROWS, TABLE_LINKS, DELETE_ID }) {
-  (TABLE_LINKS)
   return (
     <ThemeProvider>
       <Card className='h-full w-full rounded-b-md'>
@@ -51,7 +50,7 @@ export function AdmnTable ({ TABLE_HEAD, TABLE_ROWS, TABLE_LINKS, DELETE_ID }) {
                     ) {
                       return (
                         <td className={classes} key={index}>
-                          <div className='flex justify-center items-center'>
+                          <div className='flex justify-center items-center w-full'>
                             <img src={value} alt='Logo' className='h-10 w-10' />
                           </div>
                         </td>

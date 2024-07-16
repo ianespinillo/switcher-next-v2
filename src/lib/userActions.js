@@ -93,7 +93,7 @@ export const updatePassword = async formData => {
     confirmPassword: z.string(),
     id: z.string()
   })
-  
+
   const result = schema.safeParse({
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
@@ -121,7 +121,7 @@ export const updatePassword = async formData => {
   redirect('/')
 }
 
-export async function userHasPassword(id){
+export async function userHasPassword (id) {
   const user = await prisma.user.findFirst({
     where: {
       id
@@ -131,4 +131,60 @@ export async function userHasPassword(id){
     return true
   }
   redirect('/auth/change-password?id=' + id)
+}
+
+export async function findUserById (id) {
+  const sub= await prisma.user.findFirst({
+    where: {
+      id
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      Subscription: {
+        select: {
+          level: true,
+          expire_Date: true
+        }
+      }
+    }
+  })
+  if(!sub.Subscription) {
+    const sub = await prisma.subscription.create({
+      data: {
+        userId: id
+      }
+    })
+    return sub
+  }
+  return sub
+}
+
+export async function updateSubscriptionByAdmin (formData) {
+  const schema = z.object({
+    id: z.string(),
+    subLevel: z.string(),
+    expireDate: z.string()
+  })
+  const result = schema.safeParse({
+    id: formData.get('id'),
+    subLevel: formData.get('subLevel'),
+    expireDate: formData.get('expireDate')
+  })
+  if (result.error) {
+    console.log(result.error)
+    return
+  }
+  const nDate = new Date(result.data.expireDate)
+  await prisma.subscription.update({
+    where: {
+      userId: result.data.id
+    },
+    data: {
+      level: parseInt(result.data.subLevel),
+      expire_Date: nDate
+    }
+  })
+  return redirect('/admin/users')
 }
