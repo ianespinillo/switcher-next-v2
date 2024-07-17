@@ -1,10 +1,9 @@
 import React from 'react'
 import { SubsCard } from '@/components/cards/card'
 import { subs } from '@/Data/subscriptions'
-import { competitionsPerVersion } from '@/lib/versionsActions'
 
 export default async function Switcher_subs () {
-  await competitionsPerVersion()
+  
   return (
     <div className='flex flex-wrap justify-center items-center min-h-[calc(100vh-62px)] h-full w-full gap-4'>
       {subs.map((sub, i) => (
