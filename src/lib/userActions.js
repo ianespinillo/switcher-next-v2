@@ -77,16 +77,24 @@ export const getSub = async id =>
     select: { expire_Date: true, level: true }
   })
 
-export const getUsers = async () => {
+export const getUsers = async (page, q) => {
   return await prisma.user.findMany({
     where: {
       email: {
+        contains: q,
+        mode: 'insensitive',
         notIn: ['espinilloian@hotmail.com', 'iantespinillo@gmail.com']
       }
-    }
+    },
+    orderBy: {
+      name: 'asc'
+    },
+    take: 8,
+    skip: page * 8
   })
 }
 
+export const countUsers = async ()=> await prisma.user.count()
 export const updatePassword = async formData => {
   const schema = z.object({
     password: z.string(),

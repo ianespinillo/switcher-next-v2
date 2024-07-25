@@ -119,10 +119,18 @@ export const LoggedNavbar = () => {
           <Link
             className='flex items-center gap-2'
             href={session.user.role == 'admin' ? '/admin/users' : '/dashboard'}
+            onClick={() => setShowSubMenu(false)}
           >
             <IoPersonCircle size={24} /> Dashboard
           </Link>
-          <button onClick={() => signOut()}>Logout</button>
+          <button
+            onClick={() => {
+              setShowSubMenu(false)
+              signOut()
+            }}
+          >
+            Logout
+          </button>
         </ul>
       </div>
       <div className='pl-6 flex h-[76px] items-center sm:hidden fixed z-40'>
@@ -149,7 +157,40 @@ export const LoggedNavbar = () => {
             <IoIosArrowDown size={24} />
           </button>
           <div
-            className={`absolute bg-qatar-gold text-qatar-purple top-8 p-5 flex flex-col gap-2 rounded-xl transition-transform ease-in duration-300 ${
+            className={`absolute  ${
+              path.length < 3 && confed == 'AFC'
+                ? 'text-white'
+                : path.length < 3 && confed == 'CAF'
+                ? 'text-[#f3ca0c]'
+                : path.length < 3 && confed == 'CONMEBOL'
+                ? 'text-[#c99e53]'
+                : path.length < 3 && confed == 'OFC'
+                ? 'text-white'
+                : path.length < 3 && confed == 'UEFA'
+                ? 'text-white'
+                : path.length < 3 && confed == 'CONCACAF'
+                ? 'text-black'
+                : path.length < 3 && confed == 'FIFA'
+                ? 'text-white'
+                : 'text-qatar-gold'
+            } 
+                ${
+                  path.length < 3 && confed === 'AFC'
+                    ? 'bg-[#00328d]'
+                    : path.length < 3 && confed == 'CONMEBOL'
+                    ? 'bg-[#003874]'
+                    : path.length < 3 && confed == 'CAF'
+                    ? 'bg-[#018839]'
+                    : path.length < 3 && confed == 'CONCACAF'
+                    ? 'bg-[#c99e53]'
+                    : path.length < 3 && confed == 'OFC'
+                    ? 'bg-[#0067e5]'
+                    : path.length < 3 && confed == 'UEFA'
+                    ? 'bg-[#0a30ba]'
+                    : path.length < 3 && confed == 'FIFA'
+                    ? 'bg-[#003870]'
+                    : 'bg-qatar-purple'
+                } top-8 p-5 flex flex-col gap-2 rounded-xl transition-transform ease-in duration-300 ${
               showSubMenu ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
             }`}
             style={{
@@ -162,6 +203,7 @@ export const LoggedNavbar = () => {
               href={
                 session.user.role === 'admin' ? '/admin/users/' : '/dashboard'
               }
+              onClick={() => setShowSubMenu(false)}
             >
               Dashboard
             </Link>
@@ -183,7 +225,10 @@ export const LoggedNavbar = () => {
         contentLabel='Example Modal'
         overlayClassName='Overlay'
       >
-        <IoIosCloseCircle onClick={() => closeModal()} className='cursor-pointer fixed right-7' />
+        <IoIosCloseCircle
+          onClick={() => closeModal()}
+          className='cursor-pointer fixed right-7'
+        />
         <table className='  text-center w-full qatar mt-5'>
           <thead className='bg-qatar-gold text-center text-qatar-purple '>
             <tr>
