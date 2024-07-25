@@ -89,8 +89,8 @@ export const getUsers = async (page, q) => {
     orderBy: {
       name: 'asc'
     },
-    take: 8,
-    skip: page * 8
+    take: 10,
+    skip: page * 10
   })
 }
 
