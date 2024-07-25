@@ -8,7 +8,7 @@ import { InputDebouncer } from '@/components/Form/InputDebouncer'
 
 export default async function Page_ ({ searchParams }) {
   if (!searchParams.page) redirect('/admin/users?page=1')
-  const data = await getUsers(searchParams.page, searchParams.q || '')
+  const data = await getUsers(Number(searchParams.page)-1, searchParams.q || '')
   const nUsers = await countUsers()
   return (
     <div className='absolute left-[20%] w-4/5 pr-5 flex flex-col gap-4'>

@@ -81,7 +81,7 @@ export const getUsers = async (page, q) => {
   return await prisma.user.findMany({
     where: {
       email: {
-        contains: q,
+        //contains: q,
         mode: 'insensitive',
         notIn: ['espinilloian@hotmail.com', 'iantespinillo@gmail.com']
       }
