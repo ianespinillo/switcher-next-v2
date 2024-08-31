@@ -8,7 +8,7 @@ export default async function Page_ () {
   const { user } = await getServerSession(authOptions)
 
   const prods = await productsBuyed(user.email)
-  (prods)
+  console.log(prods)
 
   return (
     <div className='sm:absolute sm:left-[20%] w-full flex justify-center items-center sm:w-4/5 flex-wrap min-h-[calc(100vh-62px)] gap-5'>
