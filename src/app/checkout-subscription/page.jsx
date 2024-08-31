@@ -58,7 +58,7 @@ export default function Page_ () {
         </div>
         <PayPalScriptProvider
           options={{
-            clientId: process.env.NEXT_PUBLIC_PAYPAL_SANDBOX_CLIENT_ID,
+            clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
             components: 'buttons',
             intent: 'capture'
           }}
