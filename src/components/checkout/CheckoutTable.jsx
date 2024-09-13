@@ -71,7 +71,7 @@ export function CheckoutTable ({ email }) {
           </div>
           <PayPalScriptProvider
             options={{
-              clientId: process.env.NEXT_PUBLIC_PAYPAL_SANDBOX_CLIENT_ID
+              clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
             }}
           >
             <PayPalButtons
@@ -81,16 +81,15 @@ export function CheckoutTable ({ email }) {
                 label: 'paypal'
               }}
               createOrder={async (data, actions) => {
-                const res = await fetch('/api/checkout/', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ cart, total })
+                return actions.order.create({
+                  purchase_units: cart.map(item => ({
+                    amount: {
+                      currency_code: 'USD',
+                      value: `${parseFloat(item.price * 1.1).toFixed(2)}`
+                    },
+                    description: item.description
+                  }))
                 })
-                const order = await res.json()
-
-                return order.id
               }}
               onApprove={async (data, actions) => {
                 const {
